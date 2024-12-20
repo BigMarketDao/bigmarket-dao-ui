@@ -3,32 +3,10 @@ import puppeteer from 'puppeteer';
 import fs from 'fs';
 import path from 'path';
 import { PDFDocument } from 'pdf-lib';
+import { sui_typescript } from './links';
 
 // List of GitBook URLs to export
-const gitBookPages = [
-	'https://docs.sui.io/references/sui-api',
-	'https://docs.sui.io/references/sui-graphql',
-	'https://docs.sui.io/sui-api-ref#suix_getcoinmetadata',
-	'https://docs.sui.io/sui-api-ref#suix_getallbalances',
-	'https://docs.sui.io/sui-api-ref#suix_getallcoins',
-	'https://docs.sui.io/sui-api-ref#suix_getbalance',
-	'https://docs.sui.io/sui-api-ref#suix_gettotalsupply',
-	'https://docs.sui.io/references/cli/cheatsheet',
-	'https://docs.sui.io/references/cli/client',
-	'https://docs.sui.io/references/cli/ptb',
-	'https://docs.sui.io/references/cli/console',
-	'https://docs.sui.io/references/cli/keytool',
-	'https://docs.sui.io/references/cli/move',
-	'https://docs.sui.io/references/cli/validator',
-	'https://docs.sui.io/references/ide/move',
-	'https://docs.sui.io/references/ide/debugger',
-	'https://sdk.mystenlabs.com/zksend',
-	'https://sdk.mystenlabs.com/zksend/dapp',
-	'https://sdk.mystenlabs.com/zksend/link-builder',
-	'https://docs.sui.io/sui-glossary',
-	'https://docs.sui.io/references/contribute/sui-environment',
-	'https://docs.sui.io/references/ide/move'
-];
+const gitBookPages = sui_typescript;
 
 // Test suite
 test('Export GitBook pages to PDF', async () => {
@@ -42,7 +20,7 @@ test('Export GitBook pages to PDF', async () => {
 		console.log(`Created directory: ${exportDir}`);
 	}
 
-	const combinedPDFPath = path.join(exportDir, 'sui-cli-docs.pdf');
+	const combinedPDFPath = path.join(exportDir, 'sui-typescript-docs.pdf');
 
 	// Create a new PDF document
 	const combinedPdfDoc = await PDFDocument.create();
