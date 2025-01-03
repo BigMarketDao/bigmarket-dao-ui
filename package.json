@@ -40,9 +40,15 @@
 		"vitest": "^2.0.4"
 	},
 	"dependencies": {
+		"@mijoco/stx_helpers": "^0.5.9",
 		"@mysten/dapp-kit": "^0.14.43",
 		"@mysten/sui": "^1.17.0",
 		"@mysten/wallet-standard": "^0.13.19",
+		"@stacks/common": "^7.0.2",
+		"@stacks/connect": "^7.9.0",
+		"@stacks/encryption": "^7.0.2",
+		"@stacks/network": "^7.0.2",
+		"@stacks/transactions": "^7.0.2",
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/forms": "^0.5.9",
 		"@tailwindcss/typography": "^0.5.15",
@@ -51,6 +57,9 @@
 		"flowbite": "^2.5.2",
 		"flowbite-svelte": "^0.47.4",
 		"flowbite-svelte-icons": "^2.0.2",
+		"luxon": "^3.5.0",
+		"prismjs": "^1.29.0",
+		"svelte-hero-icons": "^5.2.0",
 		"svelte-local-storage-store": "^0.6.4"
 	}
 }

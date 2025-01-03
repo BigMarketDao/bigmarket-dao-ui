@@ -1,11 +1,16 @@
 <script lang="ts">
-	import { disconnectWallet, suiGetNonce } from '$lib/sui/sui-connect';
-	import { getConfig } from '$stores/store_helpers';
+	import { disconnectWallet } from '$lib/sui/sui-connect';
 	import { onMount } from 'svelte';
 	import ListWalletsModal from '../wallet/ListWalletsModal.svelte';
-	import type { Wallet } from '@mysten/wallet-standard';
-	import { storedAccount, storedWallet } from '$stores/wallet';
 	import { truncate } from '$lib/utils';
+	import {
+		authenticate,
+		getStxAddress,
+		handlePendingSignin,
+		isLoggedIn,
+		logUserOut
+	} from '$lib/stacks/stacks-connect';
+	import { configStore, switchConfig } from '$stores/stores_config';
 
 	export let title = 'Big Market';
 	let componentKey = 0;
@@ -14,6 +19,22 @@
 
 	let authUrl = '';
 
+	const toggleNetwork = async () => {
+		const network = $configStore.VITE_NETWORK;
+		if (network === 'devnet') switchConfig('testnet');
+		else if (network === 'testnet') switchConfig('mainnet');
+		else if (network === 'mainnet') switchConfig('devnet');
+		componentKey++;
+	};
+	const loginStacks = async () => {
+		authenticate(function () {
+			window.location.reload();
+		});
+	};
+	const logoutStacks = async () => {
+		logUserOut();
+		componentKey++;
+	};
 	const loginSui = async () => {
 		showModal = true;
 		componentKey++;
@@ -28,15 +49,19 @@
 	}
 
 	onMount(async () => {
-		const nonce = await suiGetNonce();
-		const response = await fetch(`${getConfig().VITE_BIGMARKET_API}/jwt/v1/auth-url/${nonce}`);
-		const data = await response.json();
-		authUrl = data.url;
+		// const nonce = await suiGetNonce();
+		// const response = await fetch(`${$configStore.VITE_BIGMARKET_API}/jwt/v1/auth-url/${nonce}`);
+		// const data = await response.json();
+		// authUrl = data.url;
+
+		window.onload = function () {
+			handlePendingSignin();
+		};
 	});
 </script>
 
-<header class=" p-4 text-white">
-	<div class="container mx-auto flex items-center justify-between">
+<header class=" py-4 text-white">
+	<div class="flex items-center justify-between">
 		<h1 class="text-2xl font-bold">
 			<a href="/" class="mx-2 hover:text-blue-400">{title}</a>
 		</h1>
@@ -44,13 +69,21 @@
 			<nav>
 				<a href="/" class="mx-2 hover:text-blue-400">Home</a>
 				<a href="/campaign" class="mx-2 hover:text-blue-400">Markets</a>
-				{#if $storedWallet}
-					<a href="/" on:click|preventDefault={() => logoutSui()} class="mx-2 hover:text-blue-400"
-						>{truncate($storedAccount?.address)}</a
+				<a href="/" on:click|preventDefault={() => toggleNetwork()} class="mx-2 hover:text-blue-400"
+					>{$configStore.VITE_NETWORK}</a
+				>
+				{#if isLoggedIn()}
+					<a
+						href="/"
+						on:click|preventDefault={() => logoutStacks()}
+						class="mx-2 hover:text-blue-400">{truncate(getStxAddress())}</a
 					>
 				{:else}
-					<a href="/" on:click|preventDefault={() => loginSui()} class="mx-2 hover:text-blue-400"
-						>Connect Wallet</a
+					<a
+						id="connect-wallet"
+						href="/"
+						on:click|preventDefault={() => loginStacks()}
+						class="mx-2 hover:text-blue-400">Connect Wallet</a
 					>
 				{/if}
 			</nav>

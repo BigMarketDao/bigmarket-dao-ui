@@ -1,6 +1,6 @@
-<footer class=" text-white p-4">
-	<div class=" text-xs container mx-auto text-center flex justify-between">
-		<p class="w-1/4 flex justify-around">
+<footer class=" p-4 text-white">
+	<div class=" flex justify-between text-xs">
+		<p class="flex w-1/5 justify-between">
 			<a href="/privacy">privacy policy</a>
 			|
 			<a href="/terms">terms of service</a>

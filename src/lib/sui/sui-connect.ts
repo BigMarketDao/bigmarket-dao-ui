@@ -2,7 +2,6 @@ import { SuiClient } from '@mysten/sui/client';
 import { generateNonce, generateRandomness } from '@mysten/sui/zklogin';
 import { Ed25519Keypair, Ed25519PublicKey } from '@mysten/sui/keypairs/ed25519';
 import { getConfig, getSession, getStoredAccount, getStoredWallet } from '$stores/store_helpers';
-import { suiSessionStore } from '$stores/stores';
 import { parseZkLoginSignature } from '@mysten/sui/zklogin';
 import { getWallets } from '@mysten/wallet-standard';
 import type { Wallet } from '@mysten/wallet-standard';
@@ -73,17 +72,14 @@ export async function suiGetNonce() {
 	const ephemeralKeyPair = new Ed25519Keypair();
 	const randomness = generateRandomness();
 	const nonce = generateNonce(ephemeralKeyPair.getPublicKey(), maxEpoch, randomness);
-	suiSessionStore.update((conf) => {
-		return conf;
-	});
 	return nonce;
 }
 
 export async function decodeJwt() {
 	//const decodedJwt = jwt_decode(encodedJWT) as JwtPayload;
 	const s = getSession();
-	if (!s.jwtToken) return;
-	const parsedSignature = await parseZkLoginSignature(s.jwtToken);
+	// if (!s.jwtToken) return;
+	// const parsedSignature = await parseZkLoginSignature(s.jwtToken);
 }
 
 export async function getFunds(owner: string) {

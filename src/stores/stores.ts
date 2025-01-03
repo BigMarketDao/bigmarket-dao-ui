@@ -1,4 +1,4 @@
+import type { SessionStore } from '@mijoco/stx_helpers/dist/index';
 import { persisted } from 'svelte-local-storage-store';
-import type { SuiSessionStore } from '$types/sui_types';
 
-export const suiSessionStore = persisted('suiSessionStore', {} as SuiSessionStore);
+export const sessionStore = persisted('sessionStore', {} as SessionStore);
