@@ -36,8 +36,21 @@ export function userSatBtc(amount: number, denomination: string): number {
 	}
 }
 
+export function fmtMicroToStxFormatted(amountStx: number) {
+	const converted = amountStx / 1e6; // Divide by 10^6 to shift 6 decimal places
+	const formatted = new Intl.NumberFormat('en-US', {
+		minimumFractionDigits: 6,
+		maximumFractionDigits: 6
+	}).format(converted);
+
+	console.log(formatted); // Outputs: "99,999,999.452471"
+
+	return formatted;
+}
+
 export function fmtMicroToStx(amountStx: number) {
-	return (Math.round(amountStx) / stxPrecision).toFixed(6);
+	const converted = amountStx / 1e6; // Divide by 10^6 to shift 6 decimal places
+	return converted;
 }
 
 export function fmtStxMicro(amountStx: number) {

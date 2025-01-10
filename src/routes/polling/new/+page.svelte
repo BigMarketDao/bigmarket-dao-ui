@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import CreatePoll from '$lib/components/polling/new/CreatePoll.svelte';
+	import CreatePoll from '$lib/polling/new/CreatePoll.svelte';
 
 	onMount(async () => {});
 </script>

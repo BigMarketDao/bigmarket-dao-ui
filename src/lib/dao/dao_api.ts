@@ -1,29 +1,17 @@
-import { appDetails } from '$lib/config';
-import { domain, domainCV, getStxAddress, getStxNetwork } from '$lib/stacks/stacks-connect';
 import { getConfig } from '$stores/store_helpers';
-import { openStructuredDataSignatureRequestPopup, type SignatureData } from '@stacks/connect';
-import { stringAsciiCV, tupleCV, uintCV } from '@stacks/transactions';
+import {
+	callContractReadOnly,
+	voteMessageToTupleCV,
+	type Auth,
+	type VoteMessage,
+	type VotingEventProposeProposal
+} from '@mijoco/stx_helpers/dist/index';
+import { hexToBytes } from '@stacks/common';
+import { bufferCV, contractPrincipalCV, principalCV, serializeCV } from '@stacks/transactions';
 
 export const NAKAMOTO_VOTE_START_HEIGHT = 829750 + 100;
 export const NAKAMOTO_VOTE_STOPS_HEIGHT = 833950;
-export const ADMIN_MESSAGE = 'please sign this message to authorise DAO management task.';
 export const daoVotingSupported = true;
-export type BaseAdminMessage = {
-	message: string;
-	timestamp: number;
-	admin: string;
-};
-export type Auth = {
-	message: BaseAdminMessage;
-	signature: SignatureData;
-};
-function messageCV(message: BaseAdminMessage) {
-	return tupleCV({
-		message: stringAsciiCV(message.message),
-		timestamp: uintCV(message.timestamp),
-		admin: stringAsciiCV(message.admin)
-	});
-}
 
 export async function findDaoVotes(proposalId: string) {
 	const path = `${getConfig().VITE_BIGMARKET_API}/dao/proposals/votes/${proposalId}`;
@@ -32,25 +20,58 @@ export async function findDaoVotes(proposalId: string) {
 	return res || [];
 }
 
-export async function signAdminMessage(callback: any) {
-	const adminMessage: BaseAdminMessage = {
-		message: ADMIN_MESSAGE,
-		timestamp: new Date().getTime(),
-		admin: getStxAddress()
+export async function verifySignedStructuredData(
+	vote: VoteMessage,
+	hash: string,
+	signature: string,
+	votingContract: string
+): Promise<{ result: boolean }> {
+	const functionArgs = [
+		`0x${serializeCV(voteMessageToTupleCV(vote))}`,
+		`0x${serializeCV(bufferCV(hexToBytes(signature)))}`,
+		`0x${serializeCV(principalCV(vote.voter))}`
+	];
+
+	const data = {
+		contractAddress: votingContract.split('.')[0],
+		contractName: votingContract.split('.')[1],
+		functionName: 'verify-signed-tuple',
+		functionArgs
 	};
-	const message = messageCV(adminMessage);
-	openStructuredDataSignatureRequestPopup({
-		message,
-		domain: domainCV(domain),
-		network: getStxNetwork(),
-		appDetails: {
-			name: appDetails.name,
-			icon: window.location.origin + appDetails.icon
-		},
-		onFinish(signature) {
-			callback({ message: adminMessage, signature });
-		}
-	});
+	let res: { value: boolean; type: string };
+	try {
+		res = await callContractReadOnly(getConfig().VITE_STACKS_API, data);
+		return { result: res.value };
+	} catch (e) {
+		return { result: false };
+	}
+}
+
+export async function verifySignature(
+	vote: VoteMessage,
+	hash: string,
+	signature: string,
+	votingContract: string
+): Promise<{ result: boolean }> {
+	const functionArgs = [
+		`0x${serializeCV(bufferCV(hexToBytes(hash)))}`,
+		`0x${serializeCV(bufferCV(hexToBytes(signature)))}`,
+		`0x${serializeCV(principalCV(vote.voter))}`
+	];
+
+	const data = {
+		contractAddress: votingContract.split('.')[0],
+		contractName: votingContract.split('.')[1],
+		functionName: 'verify-signature',
+		functionArgs
+	};
+	let res: { value: boolean; type: string };
+	try {
+		res = await callContractReadOnly(getConfig().VITE_STACKS_API, data);
+		return { result: res.value };
+	} catch (e) {
+		return { result: false };
+	}
 }
 
 export async function readBaseDaoEvents(daoContract: string, auth: Auth) {

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import PolymarketCard from '$lib/components/PolymarketCard.svelte';
+	import PolymarketCard from '$lib/components/common/PolymarketCard.svelte';
 
 	onMount(async () => {});
 </script>

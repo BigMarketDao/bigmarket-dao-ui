@@ -5,10 +5,10 @@
 	import { Cl, Pc, PostConditionMode } from '@stacks/transactions';
 	import { getStacksNetwork } from '@mijoco/stx_helpers/dist/index';
 	import { openContractCall, type SignatureData } from '@stacks/connect';
-	import Banner from '../../ui/Banner.svelte';
+	import Banner from '../../components/ui/Banner.svelte';
 	import { storedWallet } from '$stores/wallet';
 	import type { OpinionPoll } from '$types/polling_types';
-	import { createHashForPoll, signNewPoll } from '$lib/stacks/polling';
+	import { createHashForPoll, signNewPoll } from '$lib/polling/polling';
 	import { getStxAddress, isLoggedIn, loginStacksFromHeader } from '$lib/stacks/stacks-connect';
 	import { configDaoStore } from '$stores/stores_config_dao';
 
@@ -115,7 +115,7 @@
 	{#if inited}
 		<div class="my-8 flex w-full flex-col rounded-2xl bg-[#F4F3F0]">
 			<div
-				class="relative overflow-hidden px-10 py-10 md:grid md:auto-cols-auto md:grid-flow-col md:gap-12"
+				class="relative overflow-hidden py-10 md:grid md:auto-cols-auto md:grid-flow-col md:gap-12"
 			>
 				<div class="bg-warning-01 flex flex-col gap-y-2">
 					<div class="mb-4">

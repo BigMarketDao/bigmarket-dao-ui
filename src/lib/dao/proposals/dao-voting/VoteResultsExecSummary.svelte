@@ -3,7 +3,7 @@
 	import { sessionStore } from '$stores/stores';
 	import type { ResultsSummary, VotingEventProposeProposal } from '@mijoco/stx_helpers/dist/index';
 	import { onMount } from 'svelte';
-	import { getDaoSummary } from '$lib/dao/voting-non-stacker';
+	import { getDaoSummary } from '$lib/dao/voting_api';
 	import { NAKAMOTO_VOTE_STOPS_HEIGHT } from '$lib/dao/dao_api';
 
 	export let proposal: VotingEventProposeProposal;

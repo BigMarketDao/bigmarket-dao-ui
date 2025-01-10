@@ -6,11 +6,35 @@ import { stringAsciiCV, tupleCV, uintCV } from '@stacks/transactions';
 
 const appConfig = new AppConfig(['store_write', 'publish_data']);
 const userSession = new UserSession({ appConfig });
+const NETWORK_DEVNET = {
+	addressVersion: {
+		multiSig: 21,
+		singleSig: 26
+	},
+	MAGIC_BYTES: 'T2',
+	chainId: 2147483648
+};
+const NETWORK_TESTNET = {
+	addressVersion: {
+		multiSig: 21,
+		singleSig: 26
+	},
+	MAGIC_BYTES: 'T2',
+	chainId: 2147483648
+};
+const NETWORK_MAINNET = {
+	addressVersion: {
+		multiSig: 20,
+		singleSig: 22
+	},
+	MAGIC_BYTES: 'X2',
+	chainId: 2147483648
+};
 
 export const domain = {
 	name: getConfig().VITE_PUBLIC_APP_NAME,
 	version: getConfig().VITE_PUBLIC_APP_VERSION,
-	'chain-id': getConfig().VITE_NETWORK === 'mainnet' ? ChainId.Mainnet : ChainId.Testnet
+	'chain-id': getConfig().VITE_NETWORK === 'mainnet' ? ChainId.Testnet : ChainId.Testnet
 };
 export function domainCV(domain: any) {
 	return tupleCV({
@@ -28,6 +52,10 @@ export async function handlePendingSignin() {
 	} else if (userSession.isUserSignedIn()) {
 		// Handle case in which user is already authenticated
 	}
+}
+
+export function getUserSession() {
+	return isLoggedIn() ? userSession : undefined;
 }
 
 export function getUserData() {
@@ -64,9 +92,10 @@ export function getStxAddress() {
 }
 
 export function getStxNetwork() {
-	if (getConfig().VITE_NETWORK === 'devnet') {
+	const network = getConfig().VITE_NETWORK;
+	if (network === 'devnet') {
 		return STACKS_DEVNET;
-	} else if (getConfig().VITE_NETWORK === 'testnet') {
+	} else if (network === 'testnet') {
 		return STACKS_TESTNET;
 	} else {
 		return STACKS_MAINNET;

@@ -1,19 +1,15 @@
 import { getConfig } from '$stores/store_helpers';
 
-export async function readVotingContractEvents(
-	genesis: boolean,
-	daoContract: string,
-	votingContract: string | undefined
-) {
-	const path = `${getConfig().VITE_BIGMARKET_API}/dao-voting/v1/read-votes/${genesis}/${daoContract}/${votingContract}`;
-	const response = await fetch(path);
-	if (response.status === 404) return 'not found';
+export async function getDaoVotesByProposal(proposal: string) {
+	const url = `${getConfig().VITE_BIGMARKET_API}/dao/proposals/votes/${proposal}`;
+	const response = await fetch(url);
+	if (response.status === 404) return [];
 	const res = await response.json();
 	return res;
 }
 
 export async function getDaoVotesByProposalAndVoter(proposal: string, stxAddress: string) {
-	const url = `${getConfig().VITE_BIGMARKET_API}/dao-voting/v1/votes/${proposal}/${stxAddress}`;
+	const url = `${getConfig().VITE_BIGMARKET_API}/dao/proposals/votes/${proposal}/${stxAddress}`;
 	const response = await fetch(url);
 	if (response.status === 404) return [];
 	const res = await response.json();
@@ -21,7 +17,7 @@ export async function getDaoVotesByProposalAndVoter(proposal: string, stxAddress
 }
 
 export async function getDaoVotesByVoter(stxAddress: string) {
-	const path = `${getConfig().VITE_BIGMARKET_API}/dao-voting/v1/votes/${stxAddress}`;
+	const path = `${getConfig().VITE_BIGMARKET_API}/dao-voting/v1/votes/voter/${stxAddress}`;
 	const response = await fetch(path);
 	if (response.status === 404) return [];
 	const res = await response.json();

@@ -8,12 +8,12 @@
 
 <div class="mt-8 inline-block rounded-2xl border border-[#131416]/[12%] px-6 pb-1 pt-2">
 	<div class="flex items-center gap-2">
-		<span class="bg-bloodorange h-2 w-2 rounded-full"></span>
-		<p class="text-bloodorange font-mono text-xs uppercase tracking-wider">
+		<span class="h-2 w-2 rounded-full bg-bloodorange"></span>
+		<p class="font-mono text-xs uppercase tracking-wider text-bloodorange">
 			{#if message}{@html message}{/if}
 		</p>
 	</div>
-	<div class="bg-sand-400 my-1 h-2 animate-pulse rounded"></div>
+	<div class="my-1 h-2 animate-pulse rounded bg-sand-400"></div>
 </div>
 {#if link.address}
 	<div class="mt-6 sm:flex sm:items-center sm:justify-between">
@@ -57,14 +57,14 @@
 <div class="my-8 flex w-full flex-row">
 	<div class="my-8 flex w-full flex-col rounded-2xl bg-[#F4F3F0]">
 		<div
-			class="relative overflow-hidden px-10 py-10 md:grid md:auto-cols-auto md:grid-flow-col md:gap-12 md:px-12"
+			class="relative overflow-hidden py-10 md:grid md:auto-cols-auto md:grid-flow-col md:gap-12 md:px-12"
 		>
 			<div>
-				<div class="bg-sand-600 h-6 w-2/3 animate-pulse rounded"></div>
-				<div class="bg-sand-500 mt-6 h-2 animate-pulse rounded"></div>
-				<div class="bg-sand-500 mt-3 h-2 w-3/4 animate-pulse rounded"></div>
-				<div class="bg-sand-500 mt-3 h-2 w-2/3 animate-pulse rounded"></div>
-				<div class="bg-sand-500 mt-3 h-2 animate-pulse rounded"></div>
+				<div class="h-6 w-2/3 animate-pulse rounded bg-sand-600"></div>
+				<div class="mt-6 h-2 animate-pulse rounded bg-sand-500"></div>
+				<div class="mt-3 h-2 w-3/4 animate-pulse rounded bg-sand-500"></div>
+				<div class="mt-3 h-2 w-2/3 animate-pulse rounded bg-sand-500"></div>
+				<div class="mt-3 h-2 animate-pulse rounded bg-sand-500"></div>
 			</div>
 			<NakamotoBackground />
 			<NakamotoShield />

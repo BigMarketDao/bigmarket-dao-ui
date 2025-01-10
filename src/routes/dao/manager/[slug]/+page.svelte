@@ -4,18 +4,14 @@
 	import { getContractDeploymentTxId, isDaoConstructed } from '$lib/dao/dao_manager_helper';
 	import BootstrapDao from '$lib/dao/manager/BootstrapDao.svelte';
 	import DaoBanner from '$lib/components/common/DaoBanner.svelte';
-	import {
-		ADMIN_MESSAGE,
-		readBaseDaoEvents,
-		signAdminMessage,
-		type Auth,
-		type BaseAdminMessage
-	} from '$lib/dao/dao_api';
 	import type { SignatureData } from '@stacks/connect';
 	import { getStxAddress } from '$lib/stacks/stacks-connect';
 	import ExtensionList from '$lib/dao/manager/extensions/ExtensionList.svelte';
 	import SlotModal from '$lib/components/common/SlotModal.svelte';
 	import ProposalList from '$lib/dao/manager/proposals/ProposalList.svelte';
+	import { signAdminMessage } from '$lib/dao/voting_sip18';
+	import { readBaseDaoEvents } from '$lib/dao/dao_api';
+	import type { Auth } from '@mijoco/stx_helpers/dist/index';
 
 	let contractId: string;
 	let constructed = false;
@@ -32,6 +28,8 @@
 	}
 
 	const baseDaoEvents = async () => {
+		//const response = await signXverse();
+
 		await signAdminMessage(async function (auth: Auth) {
 			const result = await readBaseDaoEvents(contractId, auth);
 			console.log(result);
@@ -117,11 +115,11 @@
 					{#if showProposals}
 						<SlotModal onClose={() => closeModal()}>
 							<div slot="modalBody">
-								<ProposalList {contractId} status={'executed'} />
+								<ProposalList {contractId} status={'open'} />
 							</div>
 						</SlotModal>
 					{/if}
-					{#if showProposals}
+					{#if showOpenProposals}
 						<SlotModal onClose={() => closeModal()}>
 							<div slot="modalBody">
 								<ProposalList {contractId} status={'open'} />

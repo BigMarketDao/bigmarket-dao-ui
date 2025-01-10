@@ -19,7 +19,7 @@
 	import ProposalHeader from '$lib/dao/proposals/ProposalHeader.svelte';
 	import Holding from '$lib/components/ui/Holding.svelte';
 	import Placeholder from '$lib/components/common/Placeholder.svelte';
-	import DaoVotingActive from '$lib/dao/proposals/dao-voting/DaoVotingActive.svelte';
+	import DaoVotingActive from '$lib/dao/proposals/dao-voting/ballot-box/DaoVotingActive.svelte';
 	import DaoConcluded from '$lib/dao/proposals/dao-voting/DaoConcluded.svelte';
 	import { page } from '$app/state';
 	import { configStore } from '$stores/stores_config';
@@ -39,36 +39,18 @@
 	};
 
 	onMount(async () => {
-		method = Number(page.url.searchParams.get('method')) || 2;
+		// method = Number(page.url.searchParams.get('method')) || 2;
 		proposal = await getProposalLatest(page.params.slug);
 
-		if (!proposal) goto('/');
+		if (!proposal) {
+			goto('/');
+			return;
+		}
 		if (isPostVoting(proposal)) {
 			const nodao = proposal.stackerData?.nodao;
-			goto(`/dao/proposal/results/${proposal.proposal}?chain=mainnet`);
+			goto(`/dao/proposals/results/${proposal.proposal}?chain=mainnet`);
 		}
-		try {
-			// note the latter is the proposal deploy height but we'd like it to the height that corresponds to the bitcoin start height.
-			const startStacksBlock =
-				proposal.stackerData?.heights?.stacksStart || proposal.proposalData.startBlockHeight;
-			const stxAddress = getStxAddress();
-			const response = await getBalanceAtHeight(
-				$configStore.VITE_STACKS_API,
-				stxAddress,
-				startStacksBlock
-			);
-			totalBalanceAtHeight = Number(response.stx?.balance || 0);
-			lockedBalanceAtHeight = Number(response.stx?.locked || 0);
-			balanceAtHeight = ChainUtils.fromMicroAmount(
-				Number(response.stx.balance) - Number(response.stx.locked)
-			);
-			inited = true;
-		} catch (e: any) {
-			balanceAtHeight =
-				$sessionStore.keySets[$configStore.VITE_NETWORK].walletBalances?.stacks.amount || 0;
-			errorReason = e.message;
-			inited = true;
-		}
+		inited = true;
 	});
 </script>
 
@@ -81,17 +63,17 @@
 </svelte:head>
 
 <div class="mx-auto max-w-7xl py-6 md:px-6">
-	{#if proposal && inited}
+	{#if proposal}
 		<ProposalHeader {proposal} />
 
 		{#if isVoting(proposal)}
 			{#if method === 1}
 				{#if $sessionStore.stacksInfo?.burn_block_height >= proposal.proposalData.burnStartHeight}
-					<DaoVotingActive {proposal} adjustBal={balanceAtHeight} />
+					<DaoVotingActive {proposal} />
 				{:else}
 					<div class="my-8 flex w-full flex-col rounded-2xl bg-[#F4F3F0]">
 						<div
-							class="relative overflow-hidden px-10 py-10 md:grid md:auto-cols-auto md:grid-flow-col md:gap-12"
+							class="relative overflow-hidden py-10 md:grid md:auto-cols-auto md:grid-flow-col md:gap-12"
 						>
 							<Holding />
 						</div>

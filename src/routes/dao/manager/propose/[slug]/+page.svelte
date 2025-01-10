@@ -2,28 +2,12 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { getContractDeploymentTxId, isDaoConstructed } from '$lib/dao/dao_manager_helper';
-	import BootstrapDao from '$lib/dao/manager/BootstrapDao.svelte';
 	import DaoBanner from '$lib/components/common/DaoBanner.svelte';
-	import {
-		ADMIN_MESSAGE,
-		readBaseDaoEvents,
-		signAdminMessage,
-		type Auth,
-		type BaseAdminMessage
-	} from '$lib/dao/dao_api';
-	import type { SignatureData } from '@stacks/connect';
-	import { getStxAddress } from '$lib/stacks/stacks-connect';
-	import ExtensionList from '$lib/dao/manager/extensions/ExtensionList.svelte';
-	import SlotModal from '$lib/components/common/SlotModal.svelte';
-	import ProposalList from '$lib/dao/manager/proposals/ProposalList.svelte';
 	import MakeProposal from '$lib/dao/manager/proposals/MakeProposal.svelte';
 
 	let contractId: string;
 	let constructed = false;
-	let showExtensions = false;
-	let showProposals = false;
 	let txId: string | undefined;
-	let componentKey = 0;
 
 	onMount(async () => {
 		contractId = page.params.slug;

@@ -40,7 +40,7 @@
 		"vitest": "^2.0.4"
 	},
 	"dependencies": {
-		"@mijoco/stx_helpers": "^0.5.9",
+		"@mijoco/stx_helpers": "^0.5.23",
 		"@mysten/dapp-kit": "^0.14.43",
 		"@mysten/sui": "^1.17.0",
 		"@mysten/wallet-standard": "^0.13.19",
@@ -59,6 +59,8 @@
 		"flowbite-svelte-icons": "^2.0.2",
 		"luxon": "^3.5.0",
 		"prismjs": "^1.29.0",
+		"sats-connect": "^3.0.1",
+		"sbtc-bridge-lib": "^1.1.27",
 		"svelte-hero-icons": "^5.2.0",
 		"svelte-local-storage-store": "^0.6.4"
 	}

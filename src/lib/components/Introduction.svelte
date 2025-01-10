@@ -1,9 +1,6 @@
 <script>
-	import ProposalList from '$lib/dao/manager/proposals/ProposalList.svelte';
 	import ProposalListPublic from '$lib/dao/manager/proposals/ProposalListPublic.svelte';
-	import PolymarketCard from './PolymarketCard.svelte';
-
-	$: selected = 0;
+	import PolymarketCard from './common/PolymarketCard.svelte';
 </script>
 
 <!-- IntroPage.svelte -->
@@ -17,6 +14,21 @@
 	<!-- Data Collection Explanation -->
 	<div class="w-full max-w-3xl rounded-lg p-6 shadow-lg">
 		<!-- <h2 class="w-full text-2xl font-semibold mb-4 text-primary-500">What to prove?</h2> -->
+		<div class="my-5">
+			<PolymarketCard
+				target={'/dao/manager/propose/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bitcoin-dao'}
+				label={'Propose Something'}
+				description={'Something to propose to improve the DAO?'}
+				title={'Make a Proposal'}
+				selected={0}
+			>
+				<div slot="longDescription">
+					<div>
+						<ProposalListPublic />
+					</div>
+				</div>
+			</PolymarketCard>
+		</div>
 		<div class="space-4 grid min-h-[300px] grid-cols-1 gap-4 md:grid-cols-3">
 			<!-- <PolymarketCard
 				target={'https://stx.eco'}
@@ -25,13 +37,6 @@
 				description={'Stacks Improvement Proposals'}
 				selected={0}
 			/> -->
-			<PolymarketCard
-				target={'/dao/manager/propose/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bitcoin-dao'}
-				label={'Continue'}
-				title={'Make a Proposal'}
-				description={'Something to propose to improve the DAO?'}
-				selected={0}
-			/>
 			<PolymarketCard
 				target={'/dao/launcher'}
 				label={'Continue'}
@@ -53,11 +58,6 @@
 				description={'Find and manage your DAO'}
 				selected={0}
 			/>
-		</div>
-	</div>
-	<div class="w-full max-w-3xl rounded-lg p-6 shadow-lg">
-		<div>
-			<ProposalListPublic />
 		</div>
 	</div>
 </div>

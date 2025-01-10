@@ -1,12 +1,10 @@
 import { openStructuredDataSignatureRequestPopup } from '@stacks/connect';
-import { ChainId, STACKS_DEVNET } from '@stacks/network';
 import { appDetails } from '$lib/config';
 import { stringAsciiCV, tupleCV, uintCV } from '@stacks/transactions';
-import { getConfig } from '$stores/store_helpers';
 import type { OpinionPoll } from '$types/polling_types';
 import { hashSha256Sync } from '@stacks/encryption';
 import { bytesToHex } from '@stacks/common';
-import { domain, domainCV, getStxNetwork } from './stacks-connect';
+import { domain, domainCV, getStxNetwork } from '../stacks/stacks-connect';
 
 function messageCV(poll: OpinionPoll) {
 	return tupleCV({

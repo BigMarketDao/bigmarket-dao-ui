@@ -1,81 +1,84 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import {
-		PostConditionMode,
-		contractPrincipalCV,
-		falseCV,
-		trueCV,
-		uintCV
-	} from '@stacks/transactions';
-	import { showContractCall } from '@stacks/connect';
+	import { type SignatureData } from '@stacks/connect';
 	import { sessionStore } from '$stores/stores';
-	import type { VotingEventProposeProposal } from '@mijoco/stx_helpers/dist/index';
-	import { getStacksNetwork, getTransaction } from '@mijoco/stx_helpers/dist/stacks-node';
+	import {
+		dataHashSip18Vote,
+		verifySip18VoteSignature,
+		type VoteMessage,
+		type VotingEventProposeProposal
+	} from '@mijoco/stx_helpers/dist/index';
+	import { getTransaction } from '@mijoco/stx_helpers/dist/stacks-node';
 	import { getConfig } from '$stores/store_helpers';
-	import { explorerTxUrl, getAddressId, isLoggedIn } from '$lib/stacks/stacks-connect';
-	import ChainUtils from '$lib/dao/ChainUtils';
+	import { domain, explorerTxUrl, getAddressId, getStxAddress } from '$lib/stacks/stacks-connect';
 	import Banner from '$lib/components/ui/Banner.svelte';
 	import FormatUtils from '$lib/dao/FormatUtils';
+	import { fmtMicroToStxFormatted } from '$lib/utils';
+	import { newVoteMessage, postVoteMessage, signProposal } from '$lib/dao/voting_sip18';
+	import { verifySignature, verifySignedStructuredData } from '$lib/dao/dao_api';
 
 	export let proposal: VotingEventProposeProposal;
-	export let balanceAtHeight: number = 0;
+	export let totalBalanceUstx: number = 0;
+	export let onSip18Vote;
+	let progress = 0;
 
 	let errorMessage: string | undefined;
 	let txId: string;
 	let canVote = true;
 	$: explorerUrl = explorerTxUrl(txId);
 
-	$: amount = balanceAtHeight;
-	const castVote = async (vfor: boolean) => {
-		const deployer = proposal.daoContract.split('.')[0];
-		if (!isLoggedIn()) {
-			errorMessage = 'Please connect your wallet to vote';
-			return;
-		}
-		if (amount === 0 || amount < 1) {
-			errorMessage = 'Minimum voting power is 1 STX';
-			return;
-		}
-		if (amount > balanceAtHeight) {
-			errorMessage =
-				'Maximum voting power is ' + balanceAtHeight + ' STX (your balance when voting opened)';
-			amount = balanceAtHeight;
-			return;
-		}
-		let forCV = trueCV();
-		if (!vfor) {
-			forCV = falseCV();
-		}
-		// const amountUSTX = ChainUtils.toOnChainAmount(amount)
-		const amountUSTX = ChainUtils.toOnChainAmount(amount);
-		const amountCV = uintCV(amountUSTX);
-		const proposalCV = contractPrincipalCV(
-			proposal.proposal.split('.')[0],
-			proposal.proposal.split('.')[1]
+	$: amountStx = totalBalanceUstx;
+	const balanceAtHeightF = fmtMicroToStxFormatted(totalBalanceUstx);
+
+	const castVote = async (forVote: boolean) => {
+		const voteMessage: VoteMessage = await newVoteMessage(
+			proposal,
+			forVote,
+			amountStx,
+			getStxAddress()
 		);
-		await showContractCall({
-			network: getStacksNetwork(getConfig().VITE_NETWORK),
-			postConditions: [],
-			postConditionMode: PostConditionMode.Deny,
-			contractAddress: deployer,
-			contractName: proposal.votingContract.split('.')[1],
-			functionName: 'vote',
-			functionArgs: [amountCV, forCV, proposalCV],
-			onFinish: (data) => {
-				txId = data.txId;
-				localStorage.setItem('VOTED_FLAG' + getAddressId(), JSON.stringify(proposal.proposal));
-				localStorage.setItem('VOTED_TXID_3' + getAddressId(), JSON.stringify({ txId }));
-				//goto(`/dao/proposals/${proposal.proposal}/badge`);
-				window.location.reload();
-			},
-			onCancel: () => {
-				console.log('popup closed!');
+		await signProposal(voteMessage, async function (signature: SignatureData) {
+			console.log('Signature of the message', signature.signature);
+			const hash = dataHashSip18Vote(
+				getConfig().VITE_NETWORK,
+				getConfig().VITE_PUBLIC_APP_NAME,
+				getConfig().VITE_PUBLIC_APP_VERSION,
+				voteMessage
+			);
+			console.log('domain:', domain);
+			console.log('hash:' + hash);
+			const sigres = verifySip18VoteSignature(
+				getConfig().VITE_NETWORK,
+				getConfig().VITE_PUBLIC_APP_NAME,
+				getConfig().VITE_PUBLIC_APP_VERSION,
+				voteMessage,
+				signature.publicKey,
+				signature.signature
+			);
+			if (!sigres) {
+				//throw new Error('Signature is not valid');
 			}
+			const valid = await verifySignature(
+				voteMessage,
+				hash,
+				signature.signature,
+				proposal.votingContract
+			);
+			//voteMessage.timestamp = new Date().getTime(); - proove false is returned!
+			const valid2 = await verifySignedStructuredData(
+				voteMessage,
+				hash,
+				signature.signature,
+				proposal.votingContract
+			);
+			const result = await postVoteMessage(hash, { message: voteMessage, signature });
+
+			console.log('Post result:', result);
+			onSip18Vote({ result, voteMessage });
 		});
 	};
 
-	if (balanceAtHeight === 0 || balanceAtHeight < 1) {
+	if (totalBalanceUstx === 0 || totalBalanceUstx < 1) {
 		canVote = false;
 	}
 	const lookupTransaction = async (txId: string) => {
@@ -101,7 +104,6 @@
 				}
 			}
 		}
-		amount = balanceAtHeight;
 	});
 </script>
 
@@ -121,13 +123,13 @@
 			<div class="mb-3 max-w-xl">
 				<Banner
 					bannerType={'warning'}
-					message={'No STX will be spent by voting but you will pay a gas fee.'}
+					message={`Voting power at block <span class="text-bold">${FormatUtils.fmtNumber(proposal.proposalData?.startBlockHeight)}</span> is <span class="text-bold">${balanceAtHeightF}</span> STX.`}
 				/>
 			</div>
 			<div class="flex w-full flex-col justify-start">
 				<input
 					class="w-1/2 rounded-lg border-gray-800 p-2 text-black"
-					bind:value={amount}
+					bind:value={amountStx}
 					type="number"
 					id="Contribution"
 					aria-describedby="Contribution"
@@ -136,7 +138,7 @@
 					Your snapshot balance at block <span class="text-bold"
 						>{FormatUtils.fmtNumber(proposal.proposalData?.startBlockHeight)}</span
 					>
-					was <span class="text-bold">{balanceAtHeight}</span> STX.
+					was <span class="text-bold">{balanceAtHeightF}</span> STX.
 				</p>
 			</div>
 			<div class="flex w-full justify-start gap-x-4">

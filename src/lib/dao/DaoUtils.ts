@@ -1,9 +1,28 @@
+import { getStxAddress } from '$lib/stacks/stacks-connect';
+import { getConfig, getSession } from '$stores/store_helpers';
 import {
+	getBalanceAtHeight,
 	type ExtensionType,
 	type VotingEventProposeProposal
 } from '@mijoco/stx_helpers/dist/index';
 
 const DaoUtils = {
+	fullBalance: async function (proposal: VotingEventProposeProposal) {
+		const cf = getConfig();
+		const ss = getSession();
+		let totalBalanceAtHeight = 0;
+		try {
+			// note the latter is the proposal deploy height but we'd like it to the height that corresponds to the bitcoin start height.
+			const startStacksBlock = proposal.proposalData.startBlockHeight;
+			const stxAddress = getStxAddress();
+			const response = await getBalanceAtHeight(cf.VITE_STACKS_API, stxAddress, startStacksBlock);
+			totalBalanceAtHeight = Number(response.stx?.balance || 0);
+			return totalBalanceAtHeight;
+		} catch (e: any) {
+			totalBalanceAtHeight = ss.keySets[cf.VITE_NETWORK].walletBalances?.stacks.amount || 0;
+		}
+		return totalBalanceAtHeight;
+	},
 	sortProposals: function (
 		proposals: VotingEventProposeProposal[] | undefined,
 		asc: boolean,

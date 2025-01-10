@@ -1,8 +1,3 @@
-export const appDetails = {
-	name: 'stxeco-zk-vote',
-	icon: '/img/stx_eco_logo_icon_white.png'
-};
-
 export interface DaoConfig {
 	VITE_DOA_DEPLOYER: string;
 	VITE_DAO_BASE_CONTRACTS: string;

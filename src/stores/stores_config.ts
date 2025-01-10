@@ -10,6 +10,7 @@ export function switchConfig(env: string) {
 	switchDaoConfig(env);
 	configStore.set(config[env]);
 }
+
 export function setConfigByUrl(search: URLSearchParams) {
 	const newNetwork = search.get('chain');
 	if (newNetwork) {

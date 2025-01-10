@@ -23,7 +23,7 @@
 				</div>
 			{/if}
 			<div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-				<dt class="text-md leading-6 text-white">Proposal</dt>
+				<dt class="text-md leading-6 text-white">Title</dt>
 				<dd class="text-md mt-1 leading-6 text-sand-300 sm:col-span-2 sm:mt-0">
 					<a href={explorerAddressUrl(contractId)} target="_blank">{proposalMeta.title}</a>
 				</dd>

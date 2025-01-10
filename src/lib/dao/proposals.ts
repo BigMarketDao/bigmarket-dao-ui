@@ -46,11 +46,12 @@ export function isConclusionPending(proposal: VotingEventProposeProposal) {
 
 export function isPostVoting(proposal: VotingEventProposeProposal) {
 	const sess = getSession();
-	const currentHeight =
-		proposal.submissionContract.indexOf('008') > -1
-			? sess.stacksInfo.stacks_tip_height
-			: sess.stacksInfo?.burn_block_height || 0;
-	return currentHeight >= proposal.proposalData.burnEndHeight;
+	const currentHeight = sess.stacksInfo?.burn_block_height || 0;
+	const endHeight = proposal.proposalData?.burnEndHeight || 0;
+	// proposal.submissionContract.indexOf('008') > -1
+	// 	? sess.stacksInfo.stacks_tip_height
+	// 	: sess.stacksInfo?.burn_block_height || 0;
+	return currentHeight >= endHeight;
 }
 
 export async function getFunding(submissionContract: string, proposalContract: string) {
@@ -93,10 +94,12 @@ export async function getConcludedProposals() {
 	return res;
 }
 
-export async function getProposalLatest(proposal: string): Promise<VotingEventProposeProposal> {
+export async function getProposalLatest(
+	proposal: string
+): Promise<VotingEventProposeProposal | undefined> {
 	const path = `${getConfig().VITE_BIGMARKET_API}/dao/proposals/proposal/${proposal}`;
 	const response = await fetch(path);
-	if (response.status === 404) throw new Error('not found ' + proposal);
+	if (response.status === 404) return;
 	const res = await response.json();
 	return res;
 }

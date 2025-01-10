@@ -24,10 +24,6 @@
 		showSource = true;
 	};
 
-	const openExtensionChecker = () => {
-		dispatch('openExtensionChecker', extension);
-	};
-
 	const explorerUrl = () => {
 		return `${$configStore.VITE_STACKS_EXPLORER}/txid/${extension.extension}?chain=${$configStore.VITE_NETWORK}&api=${$configStore.VITE_STACKS_API}`;
 	};
@@ -80,13 +76,6 @@
 </div>
 <div class="col-span-1">
 	<a class="pointer text-light" href={explorerUrl()} target="_blank">Explorer</a>
-	{#if extension.extension.indexOf('vot') > -1 || extension.extension.indexOf('bde001') > -1 || extension.extension.indexOf('ede005') > -1 || extension.extension.indexOf('bde007') > -1}
-		<a
-			class="pointer text-light ms-3 border-s ps-3"
-			href="/"
-			on:click|preventDefault={() => openExtensionChecker()}>Count</a
-		>
-	{/if}
 </div>
 {#if showSource}
 	<div class="col-span-6">

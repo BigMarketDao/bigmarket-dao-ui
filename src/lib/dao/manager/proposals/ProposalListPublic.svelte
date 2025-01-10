@@ -12,22 +12,20 @@
 	});
 </script>
 
-<div class="rounded-md bg-sand-700 p-5 py-6">
-	<h1 class=" text-2xl">DAO Proposals</h1>
+<div class="flex flex-col gap-y-5">
+	<h1 class=" text-2xl">Open Proposals</h1>
 
-	<div class="my-10">
-		<h2>Proposals</h2>
+	<div class="">
 		{#each proposalsProposed as proposal}
 			<div class="grid w-full grid-cols-6 justify-stretch">
-				<ProposalGridItem {proposal} />
+				<ProposalGridItem {proposal} admin={false} />
 			</div>
 		{/each}
 	</div>
-	<div class="mb-10">
-		<h2>Executed Proposals</h2>
+	<div class="">
 		{#each proposalsExecuted as proposal}
 			<div class="grid w-full grid-cols-6 justify-stretch">
-				<ProposalGridItem {proposal} />
+				<ProposalGridItem {proposal} admin={false} />
 			</div>
 		{/each}
 	</div>

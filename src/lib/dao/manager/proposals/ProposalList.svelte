@@ -13,7 +13,7 @@
 	});
 </script>
 
-<div class="py-6">
+<div class="flex flex-col gap-y-5">
 	<h1 class=" text-2xl">DAO Proposals</h1>
 	<p class="strapline">
 		The following are contracts which are extensions registered for this dao. They may be changed,
@@ -22,7 +22,7 @@
 
 	{#each proposals as proposal}
 		<div class="grid w-full grid-cols-6 justify-stretch">
-			<ProposalGridItem {proposal} />
+			<ProposalGridItem {proposal} admin={true} />
 		</div>
 	{/each}
 </div>

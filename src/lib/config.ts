@@ -1,5 +1,5 @@
 export const appDetails = {
-	name: 'stxeco-zk-vote',
+	name: 'bitcoin-dao',
 	icon: '/img/stx_eco_logo_icon_white.png'
 };
 

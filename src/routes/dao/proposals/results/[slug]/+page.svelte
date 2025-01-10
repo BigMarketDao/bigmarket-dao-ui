@@ -18,7 +18,7 @@
 		isVoting
 	} from '$lib/dao/proposals';
 	import { NAKAMOTO_VOTE_STOPS_HEIGHT } from '$lib/dao/dao_api';
-	import { getDaoSummary } from '$lib/dao/voting-non-stacker';
+	import { getDaoSummary } from '$lib/dao/voting_api';
 	import ChainUtils from '$lib/dao/ChainUtils';
 	import ProposalHeader from '$lib/dao/proposals/ProposalHeader.svelte';
 	import VoteResultsOverview from '$lib/dao/proposals/dao-voting/VoteResultsOverview.svelte';
@@ -76,6 +76,9 @@
 
 	onMount(async () => {
 		proposal = await getProposalLatest(page.params.slug);
+		if (!proposal) {
+			return;
+		}
 		if (proposal.stackerData?.nodao) goto(`/dao/proposals/${page.params.slug}/results2`);
 		method = 1; //Number($page.url.searchParams.get('method')) || 3
 
@@ -127,7 +130,7 @@
 		{#if voteConcluded() || isVoting(proposal)}
 			<div class="my-8 flex w-full flex-col">
 				<div
-					class="relative overflow-hidden rounded-2xl bg-[#F4F3F0] px-10 py-10 md:grid md:auto-cols-auto md:grid-flow-col md:gap-12"
+					class="relative overflow-hidden rounded-2xl bg-[#F4F3F0] py-10 md:grid md:auto-cols-auto md:grid-flow-col md:gap-12"
 				>
 					<div class="flex flex-col items-stretch justify-items-stretch">
 						<div>
