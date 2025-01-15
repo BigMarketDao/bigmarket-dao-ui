@@ -4,7 +4,6 @@
 	import type { VotingEventProposeProposal } from '@mijoco/stx_helpers/dist/index';
 	import { getBalanceAtHeight } from '@mijoco/stx_helpers/dist/custom-node';
 	import { getConfig } from '$stores/store_helpers';
-	import { explorerTxUrl } from '$lib/stacks/stacks-connect';
 	import ChainUtils from '$lib/dao/ChainUtils';
 	import FormatUtils from '$lib/dao/FormatUtils';
 	import Banner from '$lib/components/ui/Banner.svelte';
@@ -15,7 +14,6 @@
 	let errorMessage: string | undefined;
 	let txId: string;
 	let canVote = true;
-	$: explorerUrl = explorerTxUrl(txId);
 
 	if (balanceAtHeight === 0 || balanceAtHeight < 1) {
 		canVote = false;

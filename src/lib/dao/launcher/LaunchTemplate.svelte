@@ -76,7 +76,7 @@
 </script>
 
 <svelte:head>
-	<title>Ecosystem DAO</title>
+	<title>Bitcoin DAO</title>
 	<meta
 		name="description"
 		content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin"
@@ -206,7 +206,7 @@
 												errorMessage = '';
 												launch();
 											}}
-											class="bg-success-01 w-[150px] items-center justify-center gap-x-1.5 rounded-xl border border-black bg-black px-4 py-2 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500/50 md:inline-flex"
+											class="bg-success-01 w-[150px] items-center justify-center gap-x-1.5 rounded-xl border border-bitcoinorange bg-black px-4 py-2 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500/50 md:inline-flex"
 										>
 											LAUNCH DAO
 										</button>

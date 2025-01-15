@@ -1,6 +1,6 @@
 import { AppConfig, showConnect, UserSession } from '@stacks/connect';
 import { storedStacksWallet } from '$stores/wallet';
-import { getConfig, getSession } from '$stores/store_helpers';
+import { getConfig } from '$stores/store_helpers';
 import { ChainId, STACKS_DEVNET, STACKS_MAINNET, STACKS_TESTNET } from '@stacks/network';
 import { stringAsciiCV, tupleCV, uintCV } from '@stacks/transactions';
 
@@ -66,7 +66,7 @@ export async function authenticate(callback: any) {
 	showConnect({
 		appDetails: {
 			name: 'My App',
-			icon: window.location.origin + '/my-app-logo.svg'
+			icon: window?.location?.origin || '' + '/my-app-logo.svg'
 		},
 		redirectTo: '/',
 		onFinish: () => {

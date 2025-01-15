@@ -3,10 +3,10 @@ import puppeteer from 'puppeteer';
 import fs from 'fs';
 import path from 'path';
 import { PDFDocument } from 'pdf-lib';
-import { sui_typescript } from './links';
+import { clarityFunctions, sui_typescript } from './links';
 
 // List of GitBook URLs to export
-const gitBookPages = sui_typescript;
+const gitBookPages = clarityFunctions;
 
 // Test suite
 test('Export GitBook pages to PDF', async () => {
@@ -20,7 +20,7 @@ test('Export GitBook pages to PDF', async () => {
 		console.log(`Created directory: ${exportDir}`);
 	}
 
-	const combinedPDFPath = path.join(exportDir, 'sui-typescript-docs.pdf');
+	const combinedPDFPath = path.join(exportDir, 'clarity-docs.pdf');
 
 	// Create a new PDF document
 	const combinedPdfDoc = await PDFDocument.create();

@@ -12,7 +12,7 @@
 </script>
 
 <svelte:head>
-	<title>Ecosystem DAO</title>
+	<title>Bitcoin DAO</title>
 	<meta
 		name="description"
 		content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin"

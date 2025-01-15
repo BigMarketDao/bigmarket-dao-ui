@@ -21,10 +21,7 @@ export function getProposalColor(proposal: VotingEventProposeProposal) {
 
 export function isProposedPreVoting(proposal: VotingEventProposeProposal) {
 	const sess = getSession();
-	const currentHeight =
-		proposal.submissionContract.indexOf('008') > -1
-			? sess.stacksInfo.stacks_tip_height
-			: sess.stacksInfo?.burn_block_height || 0;
+	const currentHeight = sess.stacksInfo?.burn_block_height;
 	return currentHeight < proposal.proposalData.burnStartHeight;
 }
 
@@ -32,10 +29,7 @@ export function isVoting(proposal: VotingEventProposeProposal) {
 	const sess = getSession();
 	//if (window.location.href.indexOf('localhost') > -1) return true;
 
-	const currentHeight =
-		proposal.submissionContract.indexOf('008') > -1
-			? sess.stacksInfo.stacks_tip_height
-			: sess.stacksInfo?.burn_block_height || 0;
+	const currentHeight = sess.stacksInfo.burn_block_height;
 	const res = currentHeight >= proposal.proposalData.burnStartHeight;
 	return res && currentHeight < proposal.proposalData.burnEndHeight;
 }

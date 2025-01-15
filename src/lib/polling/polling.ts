@@ -1,30 +1,177 @@
-import { openStructuredDataSignatureRequestPopup } from '@stacks/connect';
+import {
+	openStructuredDataSignatureRequestPopup,
+	showContractCall,
+	type SignatureData
+} from '@stacks/connect';
 import { appDetails } from '$lib/config';
-import { stringAsciiCV, tupleCV, uintCV } from '@stacks/transactions';
-import type { OpinionPoll } from '$types/polling_types';
+import {
+	PostConditionMode,
+	type ClarityValue,
+	type TupleCV,
+	type TupleData
+} from '@stacks/transactions';
 import { hashSha256Sync } from '@stacks/encryption';
+import { MerkleTree } from 'merkletreejs';
+import { domain, domainCV, getStxAddress, getStxNetwork } from '../stacks/stacks-connect';
+import {
+	type Auth,
+	type PollCreateEvent,
+	type OpinionPoll,
+	type PollVoteMessage,
+	pollVoteMessageToTupleCV,
+	type StoredPollVoteMessage,
+	getStacksNetwork,
+	pollVotesToClarityValue
+} from '@mijoco/stx_helpers/dist/index';
 import { bytesToHex } from '@stacks/common';
-import { domain, domainCV, getStxNetwork } from '../stacks/stacks-connect';
+import { getConfig, getSession } from '$stores/store_helpers';
+import { sha256 } from '@noble/hashes/sha256';
+import { fetchTimestamp } from '$lib/dao/voting_sip18';
 
-function messageCV(poll: OpinionPoll) {
-	return tupleCV({
-		message: stringAsciiCV(
-			'please sign this message to authorise setting up a new opinion poll - your signature authorises you to administer the poll.'
-		),
-		name: stringAsciiCV(poll.name),
-		description: stringAsciiCV(poll.description),
-		admin: stringAsciiCV(poll.admin)
+export async function getCreatePollEvent(pollId: string) {
+	const path = `${getConfig().VITE_BIGMARKET_API}/polling/polls/${pollId}`;
+	const response = await fetch(path);
+	if (response.status === 404) return [];
+	const res = await response.json();
+	return res;
+}
+
+export async function getAllOpinionPolls() {
+	const path = `${getConfig().VITE_BIGMARKET_API}/polling/polls`;
+	const response = await fetch(path);
+	if (response.status === 404) return [];
+	const res = await response.json();
+	return res;
+}
+
+export async function fetchSip18PollVotes(pollId: string) {
+	const path = `${getConfig().VITE_BIGMARKET_API}/polling/sip18-votes/${pollId}`;
+	const response = await fetch(path);
+	if (response.status === 404) return 'not found';
+	const res = await response.json();
+	return res;
+}
+
+export async function submitSip18PollVotes(
+	pollContract: string,
+	votes: Array<StoredPollVoteMessage>
+) {
+	const args = pollVotesToClarityValue(votes);
+	await showContractCall({
+		network: getStacksNetwork(getConfig().VITE_NETWORK),
+		postConditions: [],
+		postConditionMode: PostConditionMode.Deny,
+		contractAddress: pollContract.split('.')[0],
+		contractName: pollContract.split('.')[1],
+		functionName: 'batch-vote',
+		functionArgs: [args.pollVotesCV],
+		onFinish: (data) => {
+			console.log('finished contract call!', data);
+			return data.txId;
+		},
+		onCancel: () => {
+			console.log('popup closed!');
+		}
 	});
 }
 
-export async function signNewPoll(poll: OpinionPoll, callback: any) {
+export function isAdministrator(poll: PollCreateEvent) {
+	return poll.startBurnHeight === getStxAddress();
+}
+
+export function isPollActive(poll: PollCreateEvent) {
+	const burn_block_height = getSession().stacksInfo.burn_block_height;
+	return burn_block_height >= poll.startBurnHeight && burn_block_height < poll.endBurnHeight;
+}
+
+export async function postCreatePollMessage(poll: OpinionPoll, auth: Auth) {
+	const path = `${getConfig().VITE_BIGMARKET_API}/polling/polls`;
+	const response = await fetch(path, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', Authorization: '' },
+		body: JSON.stringify({ poll, auth })
+	});
+	if (response.status >= 400 && response.status < 500) return 'not allowed';
+	else if (response.status >= 500) return 'error on server';
+	const res = await response.json();
+	return res;
+}
+
+export async function signNewPoll(poll: TupleCV<TupleData<ClarityValue>>, callback: any) {
 	openStructuredDataSignatureRequestPopup({
-		message: messageCV(poll),
+		message: poll,
 		domain: domainCV(domain),
 		network: getStxNetwork(),
 		appDetails: {
 			name: appDetails.name,
-			icon: window.location.origin + appDetails.icon
+			icon: window?.location?.origin || '' + appDetails.icon
+		},
+		onFinish(signature) {
+			callback(signature);
+		}
+	});
+}
+
+// function sha256(contractId: string): string {
+// 	const encoder = new TextEncoder(); // Creates a new TextEncoder
+// 	const contractIdBytes = encoder.encode(contractId); // Encodes the string into a Uint8Array
+// 	return bytesToHex(hashSha256Sync(contractIdBytes));
+// }
+
+export function generateMerkleTree(tokens: Array<string>) {
+	const leaves = tokens.map((x) => sha256(x));
+	const tree = new MerkleTree(leaves, hashSha256Sync);
+	// const root = tree.getRoot().toString('hex');
+	return tree;
+}
+
+export function generateMerkleProof(tree: MerkleTree, token: string) {
+	const root = tree.getRoot().toString('hex');
+	const leaf = bytesToHex(sha256(token));
+	const proof = tree.getProof(leaf);
+	const isValid = tree.verify(proof, leaf, root);
+	console.log('Merkle Root:', root);
+	console.log('Proof:', proof);
+	console.log('Is valid proof:', isValid);
+	return isValid;
+}
+
+export async function newPollVoteMessage(
+	poll: PollCreateEvent,
+	vote: boolean,
+	voter: string
+): Promise<PollVoteMessage> {
+	const ts = await fetchTimestamp();
+	return {
+		attestation: vote ? 'I agree with the statement' : 'I disagree with the statement',
+		'poll-id': poll.metadataHash,
+		timestamp: ts,
+		vote,
+		voter,
+		nftContract: undefined,
+		ftContract: undefined,
+		tokenId: undefined,
+		proof: undefined
+	};
+}
+// (attestation (string-ascii 100))
+// (poll-id (buff 32))
+// (timestamp uint)
+// (vote bool)
+// (voter principal)
+// (nft-contract (optional <nft-trait>))
+// (ft-contract (optional <ft-trait>))
+// (token-id (optional uint))
+// (proof (list 10 (buff 32)))),
+
+export async function signPollVoteMessage(pollVoteMessage: PollVoteMessage, callback: any) {
+	openStructuredDataSignatureRequestPopup({
+		message: pollVoteMessageToTupleCV(pollVoteMessage),
+		domain: domainCV(domain),
+		network: getStxNetwork(),
+		appDetails: {
+			name: appDetails.name,
+			icon: (window?.location?.origin || '') + appDetails.icon
 		},
 		onFinish(data) {
 			callback(data);
@@ -32,30 +179,18 @@ export async function signNewPoll(poll: OpinionPoll, callback: any) {
 	});
 }
 
-export function createHashForPoll(originalPoll: OpinionPoll): string {
-	const hashablePoll = {
-		createdAt: originalPoll.createdAt,
-		startBitcoinHeight: originalPoll.startBitcoinHeight,
-		stopBitcoinHeight: originalPoll.stopBitcoinHeight,
-		name: originalPoll.name,
-		description: originalPoll.description,
-		admin: originalPoll.admin,
-		social: {
-			twitter: {
-				projectHandle: originalPoll.social.twitter.projectHandle
-			},
-			discord: {
-				serverId: originalPoll.social.discord.serverId
-			},
-			website: {
-				url: originalPoll.social.website.url
-			}
-		}
-	};
-
-	const sortedObject = JSON.stringify(hashablePoll, Object.keys(hashablePoll).sort());
-	const encoder = new TextEncoder();
-	const encodedBytes = encoder.encode(sortedObject);
-	const hash = bytesToHex(hashSha256Sync(encodedBytes));
-	return hash;
+export async function postPollVoteMessage(
+	pollVoteObjectHash: string,
+	auth: { message: PollVoteMessage; signature: SignatureData }
+) {
+	const path = `${getConfig().VITE_BIGMARKET_API}/polling/sip18-votes/${pollVoteObjectHash}`;
+	const response = await fetch(path, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', Authorization: '' },
+		body: JSON.stringify(auth)
+	});
+	if (response.status >= 400 && response.status < 500) return 'not allowed';
+	else if (response.status >= 500) return 'error on server';
+	const res = await response.json();
+	return res;
 }

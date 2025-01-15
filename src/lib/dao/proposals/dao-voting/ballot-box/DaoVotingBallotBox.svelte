@@ -15,23 +15,21 @@
 	import { explorerTxUrl, getAddressId, isLoggedIn } from '$lib/stacks/stacks-connect';
 	import ChainUtils from '$lib/dao/ChainUtils';
 	import Banner from '$lib/components/ui/Banner.svelte';
-	import FormatUtils from '$lib/dao/FormatUtils';
 	import { fmtMicroToStx, fmtMicroToStxFormatted } from '$lib/utils';
-	import SlotModal from '$lib/components/common/SlotModal.svelte';
 
 	export let onTxVote;
 	export let proposal: VotingEventProposeProposal;
-	export let totalBalanceUstx: number = 0;
+	export let votingPower: number = 0;
 
-	let amountStx = fmtMicroToStx(totalBalanceUstx);
-	const balanceAtHeightF = fmtMicroToStxFormatted(totalBalanceUstx);
+	let amountStx = fmtMicroToStx(votingPower);
+	const balanceAtHeightF = fmtMicroToStxFormatted(votingPower);
 
 	let errorMessage: string | undefined;
 	let txId: string;
 	let canVote = true;
 	$: explorerUrl = explorerTxUrl(txId);
 
-	$: amountStx = fmtMicroToStx(totalBalanceUstx);
+	$: amountStx = fmtMicroToStx(votingPower);
 	const castVote = async (vfor: boolean) => {
 		const deployer = proposal.daoContract.split('.')[0];
 		if (!isLoggedIn()) {
@@ -42,10 +40,10 @@
 			errorMessage = 'Minimum voting power is 1 STX';
 			return;
 		}
-		if (amountStx > totalBalanceUstx) {
+		if (amountStx > votingPower) {
 			errorMessage =
 				'Maximum voting power is ' + balanceAtHeightF + ' STX (your balance when voting opened)';
-			amountStx = totalBalanceUstx;
+			amountStx = votingPower;
 			return;
 		}
 		let forCV = trueCV();
@@ -81,7 +79,7 @@
 		});
 	};
 
-	if (totalBalanceUstx === 0 || totalBalanceUstx < 1) {
+	if (votingPower === 0 || votingPower < 1) {
 		canVote = false;
 	}
 	const lookupTransaction = async (txId: string) => {
@@ -107,13 +105,12 @@
 				}
 			}
 		}
-		amountStx = fmtMicroToStx(totalBalanceUstx);
+		amountStx = fmtMicroToStx(votingPower);
 	});
 </script>
 
 <div>
 	<div class="flex flex-col gap-y-4">
-		<div class="text-xl">Snapshot balance</div>
 		{#if txId}
 			<div class="mb-3 max-w-xl">
 				<Banner
@@ -124,34 +121,13 @@
 				/>
 			</div>
 		{:else}
-			<div class="mb-3 max-w-xl">
-				<Banner
-					bannerType={'warning'}
-					message={'No STX will be spent by voting but you will pay a gas fee.'}
-				/>
-			</div>
-			<div class="flex w-full flex-col justify-start">
-				<input
-					class="w-1/2 rounded-lg border-gray-800 p-2 text-black"
-					bind:value={amountStx}
-					type="number"
-					id="Contribution"
-					aria-describedby="Contribution"
-				/>
-				<p class="mt-5 text-sm">
-					Your snapshot balance at block <span class="text-bold"
-						>{FormatUtils.fmtNumber(proposal.proposalData?.startBlockHeight)}</span
-					>
-					was <span class="text-bold">{balanceAtHeightF}</span> STX.
-				</p>
-			</div>
 			<div class="flex w-full justify-start gap-x-4">
 				<button
 					on:click={() => {
 						errorMessage = undefined;
 						castVote(true);
 					}}
-					class="w-[150px] items-center justify-center gap-x-1.5 rounded-xl border border-black bg-black px-4 py-2 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500/50 md:inline-flex"
+					class="w-[150px] items-center justify-center gap-x-1.5 rounded-xl border border-bitcoinorange bg-black px-4 py-2 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500/50 md:inline-flex"
 				>
 					VOTE YES
 				</button>
@@ -160,7 +136,7 @@
 						errorMessage = undefined;
 						castVote(false);
 					}}
-					class="w-[150px] items-center justify-center gap-x-1.5 rounded-xl border border-black bg-black px-4 py-2 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500/50 md:inline-flex"
+					class="w-[150px] items-center justify-center gap-x-1.5 rounded-xl border border-bitcoinorange bg-black px-4 py-2 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500/50 md:inline-flex"
 				>
 					VOTE NO
 				</button>

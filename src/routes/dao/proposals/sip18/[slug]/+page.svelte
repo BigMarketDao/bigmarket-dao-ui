@@ -39,7 +39,7 @@
 </script>
 
 <svelte:head>
-	<title>Ecosystem DAO - SIP Voting</title>
+	<title>Bitcoin DAO - SIP Voting</title>
 	<meta
 		name="description"
 		content="Stacks Improvement Proposals - governance of the Stacks Blockchain."

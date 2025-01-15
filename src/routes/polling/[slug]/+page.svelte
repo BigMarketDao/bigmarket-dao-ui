@@ -1,8 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import PolymarketCard from '$lib/components/common/PolymarketCard.svelte';
+	import { page } from '$app/state';
 
-	onMount(async () => {});
+	let pollContract: string;
+
+	onMount(async () => {
+		pollContract = page.params.slug;
+	});
 </script>
 
 <svelte:head>
@@ -20,7 +25,7 @@
 		<div class="flex flex-col sm:flex-row">
 			<div class="order-1 w-3/4 py-4 md:order-1">
 				<PolymarketCard
-					target={'/polling/new'}
+					target={'/polling/new/' + pollContract}
 					label={'Start here!'}
 					description={undefined}
 					title={'New Poll'}

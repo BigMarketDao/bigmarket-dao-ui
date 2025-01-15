@@ -2,12 +2,6 @@
 	import { onMount } from 'svelte';
 	import { type SignatureData } from '@stacks/connect';
 	import { sessionStore } from '$stores/stores';
-	import {
-		dataHashSip18Vote,
-		verifySip18VoteSignature,
-		type VoteMessage,
-		type VotingEventProposeProposal
-	} from '@mijoco/stx_helpers/dist/index';
 	import { getTransaction } from '@mijoco/stx_helpers/dist/stacks-node';
 	import { getConfig } from '$stores/store_helpers';
 	import { domain, explorerTxUrl, getAddressId, getStxAddress } from '$lib/stacks/stacks-connect';
@@ -15,10 +9,17 @@
 	import FormatUtils from '$lib/dao/FormatUtils';
 	import { fmtMicroToStxFormatted } from '$lib/utils';
 	import { newVoteMessage, postVoteMessage, signProposal } from '$lib/dao/voting_sip18';
-	import { verifySignature, verifySignedStructuredData } from '$lib/dao/dao_api';
+	import { verifySignature } from '$lib/dao/dao_api';
+	import {
+		dataHashSip18,
+		verifySip18VoteSignature,
+		voteMessageToTupleCV,
+		type VoteMessage,
+		type VotingEventProposeProposal
+	} from '@mijoco/stx_helpers/dist/index';
 
 	export let proposal: VotingEventProposeProposal;
-	export let totalBalanceUstx: number = 0;
+	export let votingPower: number = 0;
 	export let onSip18Vote;
 	let progress = 0;
 
@@ -27,8 +28,8 @@
 	let canVote = true;
 	$: explorerUrl = explorerTxUrl(txId);
 
-	$: amountStx = totalBalanceUstx;
-	const balanceAtHeightF = fmtMicroToStxFormatted(totalBalanceUstx);
+	$: amountStx = votingPower;
+	const balanceAtHeightF = fmtMicroToStxFormatted(votingPower);
 
 	const castVote = async (forVote: boolean) => {
 		const voteMessage: VoteMessage = await newVoteMessage(
@@ -39,11 +40,11 @@
 		);
 		await signProposal(voteMessage, async function (signature: SignatureData) {
 			console.log('Signature of the message', signature.signature);
-			const hash = dataHashSip18Vote(
+			const hash = dataHashSip18(
 				getConfig().VITE_NETWORK,
 				getConfig().VITE_PUBLIC_APP_NAME,
 				getConfig().VITE_PUBLIC_APP_VERSION,
-				voteMessage
+				voteMessageToTupleCV(voteMessage)
 			);
 			console.log('domain:', domain);
 			console.log('hash:' + hash);
@@ -65,12 +66,6 @@
 				proposal.votingContract
 			);
 			//voteMessage.timestamp = new Date().getTime(); - proove false is returned!
-			const valid2 = await verifySignedStructuredData(
-				voteMessage,
-				hash,
-				signature.signature,
-				proposal.votingContract
-			);
 			const result = await postVoteMessage(hash, { message: voteMessage, signature });
 
 			console.log('Post result:', result);
@@ -78,7 +73,7 @@
 		});
 	};
 
-	if (totalBalanceUstx === 0 || totalBalanceUstx < 1) {
+	if (votingPower === 0 || votingPower < 1) {
 		canVote = false;
 	}
 	const lookupTransaction = async (txId: string) => {
@@ -109,7 +104,6 @@
 
 <div>
 	<div class="flex flex-col gap-y-4">
-		<div class="text-xl">Snapshot balance</div>
 		{#if txId}
 			<div class="mb-3 max-w-xl">
 				<Banner
@@ -120,34 +114,13 @@
 				/>
 			</div>
 		{:else}
-			<div class="mb-3 max-w-xl">
-				<Banner
-					bannerType={'warning'}
-					message={`Voting power at block <span class="text-bold">${FormatUtils.fmtNumber(proposal.proposalData?.startBlockHeight)}</span> is <span class="text-bold">${balanceAtHeightF}</span> STX.`}
-				/>
-			</div>
-			<div class="flex w-full flex-col justify-start">
-				<input
-					class="w-1/2 rounded-lg border-gray-800 p-2 text-black"
-					bind:value={amountStx}
-					type="number"
-					id="Contribution"
-					aria-describedby="Contribution"
-				/>
-				<p class="mt-5 text-sm">
-					Your snapshot balance at block <span class="text-bold"
-						>{FormatUtils.fmtNumber(proposal.proposalData?.startBlockHeight)}</span
-					>
-					was <span class="text-bold">{balanceAtHeightF}</span> STX.
-				</p>
-			</div>
 			<div class="flex w-full justify-start gap-x-4">
 				<button
 					on:click={() => {
 						errorMessage = undefined;
 						castVote(true);
 					}}
-					class="w-[150px] items-center justify-center gap-x-1.5 rounded-xl border border-black bg-black px-4 py-2 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500/50 md:inline-flex"
+					class="w-[150px] items-center justify-center gap-x-1.5 rounded-xl border border-bitcoinorange bg-black px-4 py-2 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500/50 md:inline-flex"
 				>
 					VOTE YES
 				</button>
@@ -156,7 +129,7 @@
 						errorMessage = undefined;
 						castVote(false);
 					}}
-					class="w-[150px] items-center justify-center gap-x-1.5 rounded-xl border border-black bg-black px-4 py-2 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500/50 md:inline-flex"
+					class="w-[150px] items-center justify-center gap-x-1.5 rounded-xl border border-bitcoinorange bg-black px-4 py-2 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500/50 md:inline-flex"
 				>
 					VOTE NO
 				</button>

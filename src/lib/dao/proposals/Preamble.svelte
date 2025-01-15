@@ -18,7 +18,7 @@
 				<div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
 					<dt class="text-md leading-6 text-white">DAO</dt>
 					<dd class="text-md mt-1 leading-6 text-sand-300 sm:col-span-2 sm:mt-0">
-						{proposalMeta.dao || 'Ecosystem DAO'}
+						{proposalMeta.dao || 'Bitcoin DAO'}
 					</dd>
 				</div>
 			{/if}

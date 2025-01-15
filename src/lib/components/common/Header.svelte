@@ -33,7 +33,7 @@
 	};
 	const loginStacks = async () => {
 		authenticate(function () {
-			window.location.reload();
+			typeof window !== 'undefined' ? window.location.reload() : '';
 		});
 	};
 	const logoutStacks = async () => {
@@ -58,10 +58,11 @@
 		// const response = await fetch(`${$configStore.VITE_BIGMARKET_API}/jwt/v1/auth-url/${nonce}`);
 		// const data = await response.json();
 		// authUrl = data.url;
-
-		window.onload = function () {
-			handlePendingSignin();
-		};
+		if (typeof window !== 'undefined') {
+			window.onload = function () {
+				handlePendingSignin();
+			};
+		}
 	});
 </script>
 

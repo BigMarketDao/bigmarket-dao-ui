@@ -1,5 +1,7 @@
 <script>
 	import ProposalListPublic from '$lib/dao/manager/proposals/ProposalListPublic.svelte';
+	import PollListPublic from '$lib/polling/polls/PollListPublic.svelte';
+	import { configDaoStore } from '$stores/stores_config_dao';
 	import PolymarketCard from './common/PolymarketCard.svelte';
 </script>
 
@@ -16,6 +18,19 @@
 		<!-- <h2 class="w-full text-2xl font-semibold mb-4 text-primary-500">What to prove?</h2> -->
 		<div class="my-5">
 			<PolymarketCard
+				target={'/polling/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde021-opinion-polling'}
+				label={'New Poll'}
+				description={'Get your communities input!'}
+				title={'Opinion Polling'}
+				selected={0}
+			>
+				<div slot="longDescription">
+					<PollListPublic />
+				</div>
+			</PolymarketCard>
+		</div>
+		<div class="my-5">
+			<PolymarketCard
 				target={'/dao/manager/propose/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bitcoin-dao'}
 				label={'Propose Something'}
 				description={'Something to propose to improve the DAO?'}
@@ -29,7 +44,7 @@
 				</div>
 			</PolymarketCard>
 		</div>
-		<div class="space-4 grid min-h-[300px] grid-cols-1 gap-4 md:grid-cols-3">
+		<div class="space-4 flex min-h-[300px] justify-around gap-5">
 			<!-- <PolymarketCard
 				target={'https://stx.eco'}
 				label={'Vote Now'}
@@ -37,27 +52,24 @@
 				description={'Stacks Improvement Proposals'}
 				selected={0}
 			/> -->
-			<PolymarketCard
-				target={'/dao/launcher'}
-				label={'Continue'}
-				title={'DAO'}
-				description={'Launch a dao to support your project'}
-				selected={0}
-			/>
-			<PolymarketCard
-				target={'/polling'}
-				label={'Opinion Poll'}
-				title={'Opinion Poll'}
-				description={'Run polls, tap inot the wisdom of the crowd'}
-				selected={0}
-			/>
-			<PolymarketCard
-				target={'/dao/manager'}
-				label={'Manage DAO'}
-				title={'Manage DAO'}
-				description={'Find and manage your DAO'}
-				selected={0}
-			/>
+			<div class="w-full">
+				<PolymarketCard
+					target={'/dao/launcher'}
+					label={'Continue'}
+					title={'DAO'}
+					description={'Launch a dao to support your project'}
+					selected={0}
+				/>
+			</div>
+			<div class="w-full">
+				<PolymarketCard
+					target={'/dao/manager'}
+					label={'Manage DAO'}
+					title={'Manage DAO'}
+					description={'Find and manage your DAO'}
+					selected={0}
+				/>
+			</div>
 		</div>
 	</div>
 </div>

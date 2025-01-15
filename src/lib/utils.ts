@@ -117,7 +117,7 @@ export function downloadCsv(data: any, filename: string) {
 	// and passing the data with type
 	const blob = new Blob([data], { type: 'text/csv' });
 	// Creating an object for downloading url
-	const url = window.URL.createObjectURL(blob);
+	const url = typeof window !== 'undefined' ? window.URL.createObjectURL(blob) : '';
 	// Creating an anchor(a) tag of HTML
 	const a = document.createElement('a');
 	// Passing the blob downloading url

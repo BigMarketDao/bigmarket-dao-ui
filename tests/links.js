@@ -115,6 +115,13 @@ export const bitcoinDao = [
 	'https://github.com/radicleart/bitcoin-dao/blob/clarigen-tests/contracts/extensions/bde004-core-execute.clar',
 	'https://github.com/radicleart/bitcoin-dao/blob/clarigen-tests/contracts/extensions/bde006-treasury.clar'
 ];
+export const clarityFunctions = [
+	'https://docs.stacks.co/reference/keywords',
+	'https://docs.stacks.co/reference/types',
+	'https://docs.stacks.co/reference/functions',
+	'https://docs.stacks.co/reference/api',
+	'https://docs.stacks.co/example-contracts/audited-starter-contracts'
+];
 export const executorPages = [
 	'https://github.com/Clarity-Innovation-Lab/executor-dao',
 	'https://github.com/Clarity-Innovation-Lab/executor-dao/blob/main/contracts/executor-dao.clar',

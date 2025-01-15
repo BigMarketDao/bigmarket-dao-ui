@@ -16,23 +16,23 @@
 	}
 
 	onMount(async () => {
-		window.addEventListener('keydown', handleKeyDown);
+		if (typeof window !== 'undefined') window.addEventListener('keydown', handleKeyDown);
 	});
 
 	onDestroy(() => {
-		window.removeEventListener('keydown', handleKeyDown);
+		if (typeof window !== 'undefined') window.removeEventListener('keydown', handleKeyDown);
 	});
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-	class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+	class="fixed inset-0 z-50 flex items-center justify-center bg-black backdrop-blur-sm transition-opacity duration-300"
 	style="@apply animate-fade-in"
 	on:click={closeModal}
 >
 	<div
-		class="relative h-1/2 w-2/3 overflow-auto rounded-lg border border-white bg-black p-8 text-white shadow-lg transition-transform duration-300"
+		class="relative h-3/4 w-3/4 overflow-auto rounded-lg border border-white bg-black p-8 text-white shadow-lg transition-transform duration-300"
 		on:click|stopPropagation
 	>
 		<slot name="modalBody"></slot>

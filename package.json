@@ -40,12 +40,12 @@
 		"vitest": "^2.0.4"
 	},
 	"dependencies": {
-		"@mijoco/stx_helpers": "^0.5.23",
+		"@mijoco/stx_helpers": "^0.5.39",
 		"@mysten/dapp-kit": "^0.14.43",
 		"@mysten/sui": "^1.17.0",
 		"@mysten/wallet-standard": "^0.13.19",
 		"@stacks/common": "^7.0.2",
-		"@stacks/connect": "^7.9.0",
+		"@stacks/connect": "^7.10.0",
 		"@stacks/encryption": "^7.0.2",
 		"@stacks/network": "^7.0.2",
 		"@stacks/transactions": "^7.0.2",
@@ -58,6 +58,7 @@
 		"flowbite-svelte": "^0.47.4",
 		"flowbite-svelte-icons": "^2.0.2",
 		"luxon": "^3.5.0",
+		"merkletreejs": "^0.4.1",
 		"prismjs": "^1.29.0",
 		"sats-connect": "^3.0.1",
 		"sbtc-bridge-lib": "^1.1.27",

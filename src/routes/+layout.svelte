@@ -13,6 +13,7 @@
 
 	const unsubscribe1 = sessionStore.subscribe(() => {});
 	const unsubscribe3 = configStore.subscribe(() => {});
+	let inited = false;
 
 	onDestroy(async () => {
 		unsubscribe1();
@@ -40,7 +41,8 @@
 	};
 
 	onMount(async () => {
-		initApp();
+		await initApp();
+		inited = true;
 	});
 </script>
 
@@ -49,11 +51,13 @@
 >
 	<div class=" min-h-[calc(100vh-160px)] px-6">
 		<div class="relative mx-auto flex min-h-screen flex-col">
-			<div class="mx-[10%]"><Header /></div>
-			<div class="mx-[10%] grow">
-				<slot></slot>
-			</div>
-			<div class="mx-[10%]"><Footer /></div>
+			{#if inited}
+				<div class="mx-[10%]"><Header /></div>
+				<div class="mx-[10%] grow">
+					<slot></slot>
+				</div>
+				<div class="mx-[10%]"><Footer /></div>
+			{/if}
 		</div>
 	</div>
 </div>

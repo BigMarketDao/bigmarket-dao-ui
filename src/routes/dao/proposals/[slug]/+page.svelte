@@ -29,7 +29,7 @@
 	let proposal: VotingEventProposeProposal | undefined;
 	let lockedBalanceAtHeight: number;
 	let totalBalanceAtHeight: number;
-	let balanceAtHeight: number = 0;
+	let postVoting: boolean = false;
 	let inited = false;
 
 	const conclude = async () => {
@@ -41,6 +41,9 @@
 	onMount(async () => {
 		// method = Number(page.url.searchParams.get('method')) || 2;
 		proposal = await getProposalLatest(page.params.slug);
+		postVoting =
+			($sessionStore?.stacksInfo?.burn_block_height || 0) >=
+			(proposal?.proposalData?.burnStartHeight || 0);
 
 		if (!proposal) {
 			goto('/');
@@ -48,14 +51,14 @@
 		}
 		if (isPostVoting(proposal)) {
 			const nodao = proposal.stackerData?.nodao;
-			goto(`/dao/proposals/results/${proposal.proposal}?chain=mainnet`);
+			//goto(`/dao/proposals/results/${proposal.proposal}?chain=mainnet`);
 		}
 		inited = true;
 	});
 </script>
 
 <svelte:head>
-	<title>Ecosystem DAO - SIP Voting</title>
+	<title>Bitcoin DAO - SIP Voting</title>
 	<meta
 		name="description"
 		content="Stacks Improvement Proposals - governance of the Stacks Blockchain."
@@ -67,23 +70,7 @@
 		<ProposalHeader {proposal} />
 
 		{#if isVoting(proposal)}
-			{#if method === 1}
-				{#if $sessionStore.stacksInfo?.burn_block_height >= proposal.proposalData.burnStartHeight}
-					<DaoVotingActive {proposal} />
-				{:else}
-					<div class="my-8 flex w-full flex-col rounded-2xl bg-[#F4F3F0]">
-						<div
-							class="relative overflow-hidden py-10 md:grid md:auto-cols-auto md:grid-flow-col md:gap-12"
-						>
-							<Holding />
-						</div>
-					</div>
-				{/if}
-			{:else}
-				<div class="flex flex-col gap-y-6 rounded-md border border-gray-900 bg-white/5 p-4">
-					<Skeleton size="md" />
-				</div>
-			{/if}
+			<DaoVotingActive {proposal} />
 		{:else if isProposedPreVoting(proposal)}
 			<Holding />
 		{:else if isConclusionPending(proposal)}

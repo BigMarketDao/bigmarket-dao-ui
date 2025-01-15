@@ -10,7 +10,7 @@
 
 	const gotoLink = async () => {
 		if (target.startsWith('https')) {
-			window.location.replace(target);
+			typeof window !== 'undefined' ? window.location.replace(target) : '';
 		} else {
 			goto(target);
 		}
@@ -36,7 +36,7 @@
 			<div class="mt-8 flex w-full justify-center">
 				<button
 					on:click={() => gotoLink()}
-					class="rounded bg-primary-500 px-6 py-2 font-semibold text-black transition duration-200 hover:bg-primary-600"
+					class="rounded bg-bitcoinorange px-6 py-2 font-semibold text-black transition duration-200 hover:bg-primary-600"
 				>
 					<ArrowRightAltOutline class="inline" />
 					{label}

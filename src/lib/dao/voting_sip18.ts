@@ -26,6 +26,8 @@ import {
 	voteMessageToTupleCV,
 	votesToClarityValue,
 	type BaseAdminMessage,
+	type PollCreateEvent,
+	type PollVoteMessage,
 	type StoredVoteMessage,
 	type VoteMessage,
 	type VotingEventProposeProposal
@@ -88,7 +90,7 @@ export async function postVoteMessage(
 export async function signAdminMessage(callback: any) {
 	const adminMessage: BaseAdminMessage = {
 		message: ADMIN_MESSAGE,
-		timestamp: 1736281142366, //new Date().getTime(),
+		timestamp: new Date().getTime(),
 		admin: getStxAddress()
 	};
 	const chainId = getConfig().VITE_NETWORK === 'mainnet' ? ChainId.Mainnet : ChainId.Testnet;
@@ -111,7 +113,7 @@ export async function signAdminMessage(callback: any) {
 		network: getStxNetwork(),
 		appDetails: {
 			name: appDetails.name,
-			icon: window.location.origin + appDetails.icon
+			icon: (window?.location?.origin || '') + appDetails.icon
 		},
 		onFinish(signature) {
 			const network = getConfig().VITE_NETWORK;
@@ -187,7 +189,7 @@ export async function signProposal(voteMessage: VoteMessage, callback: any) {
 		network: getStxNetwork(),
 		appDetails: {
 			name: appDetails.name,
-			icon: window.location.origin + appDetails.icon
+			icon: (window?.location?.origin || '') + appDetails.icon
 		},
 		onFinish(data) {
 			callback(data);

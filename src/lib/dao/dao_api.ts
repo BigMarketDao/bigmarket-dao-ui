@@ -3,8 +3,10 @@ import {
 	callContractReadOnly,
 	voteMessageToTupleCV,
 	type Auth,
+	type ProposalData,
 	type VoteMessage,
-	type VotingEventProposeProposal
+	type VotingEventProposeProposal,
+	type VotingEventVoteOnProposal
 } from '@mijoco/stx_helpers/dist/index';
 import { hexToBytes } from '@stacks/common';
 import { bufferCV, contractPrincipalCV, principalCV, serializeCV } from '@stacks/transactions';
@@ -19,33 +21,80 @@ export async function findDaoVotes(proposalId: string) {
 	const res = await response.json();
 	return res || [];
 }
+export type VoteSummary = {
+	stxFor: number;
+	stxAgainst: number;
+	accountsFor: number;
+	accountsAgainst: number;
+	inFavour: string;
+	passed: boolean;
+	customMajority: number;
+};
+export function summarizeVotes(
+	votes: Array<VotingEventVoteOnProposal>,
+	proposalData: ProposalData
+): VoteSummary {
+	const summary = votes.reduce(
+		(acc, vote) => {
+			if (vote.for) {
+				acc.stxFor += vote.amount;
+				acc.accountsFor.add(vote.voter);
+			} else {
+				acc.stxAgainst += vote.amount;
+				acc.accountsAgainst.add(vote.voter);
+			}
+			return acc;
+		},
+		{
+			stxFor: 0,
+			stxAgainst: 0,
+			accountsFor: new Set(),
+			accountsAgainst: new Set()
+		}
+	);
 
-export async function verifySignedStructuredData(
-	vote: VoteMessage,
-	hash: string,
-	signature: string,
-	votingContract: string
-): Promise<{ result: boolean }> {
-	const functionArgs = [
-		`0x${serializeCV(voteMessageToTupleCV(vote))}`,
-		`0x${serializeCV(bufferCV(hexToBytes(signature)))}`,
-		`0x${serializeCV(principalCV(vote.voter))}`
-	];
+	// Calculate percentage in favour
+	const totalStx = summary.stxFor + summary.stxAgainst;
+	const inFavour = totalStx === 0 ? 0 : (summary.stxFor / totalStx) * 100;
 
-	const data = {
-		contractAddress: votingContract.split('.')[0],
-		contractName: votingContract.split('.')[1],
-		functionName: 'verify-signed-tuple',
-		functionArgs
+	// Return the final summary
+	return {
+		stxFor: proposalData.votesFor,
+		stxAgainst: proposalData.votesAgainst,
+		accountsFor: summary.accountsFor.size,
+		accountsAgainst: summary.accountsAgainst.size,
+		inFavour: inFavour.toFixed(4),
+		passed: proposalData.passed,
+		customMajority: proposalData.customMajority
 	};
-	let res: { value: boolean; type: string };
-	try {
-		res = await callContractReadOnly(getConfig().VITE_STACKS_API, data);
-		return { result: res.value };
-	} catch (e) {
-		return { result: false };
-	}
 }
+
+// export async function verifySignedStructuredData(
+// 	vote: VoteMessage,
+// 	hash: string,
+// 	signature: string,
+// 	votingContract: string
+// ): Promise<{ result: boolean }> {
+// 	const functionArgs = [
+// 		`0x${serializeCV(voteMessageToTupleCV(vote))}`,
+// 		`0x${serializeCV(bufferCV(hexToBytes(signature)))}`,
+// 		`0x${serializeCV(principalCV(vote.voter))}`
+// 	];
+
+// 	const data = {
+// 		contractAddress: votingContract.split('.')[0],
+// 		contractName: votingContract.split('.')[1],
+// 		functionName: 'verify-signed-tuple',
+// 		functionArgs
+// 	};
+// 	let res: { value: boolean; type: string };
+// 	try {
+// 		res = await callContractReadOnly(getConfig().VITE_STACKS_API, data);
+// 		return { result: res.value };
+// 	} catch (e) {
+// 		return { result: false };
+// 	}
+// }
 
 export async function verifySignature(
 	vote: VoteMessage,

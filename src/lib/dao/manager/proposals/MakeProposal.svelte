@@ -80,7 +80,7 @@
 	}
 	let showNoop = false;
 	const contractSource = `
-    ;; DAO: Ecosystem DAO
+    ;; DAO: Bitcoin DAO
     ;; Title: <title>
     ;; Author: <author>
     ;; Synopsis: <synopsis>
@@ -200,7 +200,7 @@
 </script>
 
 <svelte:head>
-	<title>Ecosystem DAO</title>
+	<title>Bitcoin DAO</title>
 	<meta
 		name="description"
 		content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin"

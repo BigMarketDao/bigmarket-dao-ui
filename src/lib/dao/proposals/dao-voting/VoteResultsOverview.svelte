@@ -3,11 +3,9 @@
 	import cross from '$lib/assets/cross.png';
 	import { sessionStore } from '$stores/stores';
 	import { onMount } from 'svelte';
-	import type { ResultsSummary } from '@mijoco/stx_helpers/dist/index';
-	import { NAKAMOTO_VOTE_STOPS_HEIGHT } from '$lib/dao/dao_api';
+	import { NAKAMOTO_VOTE_STOPS_HEIGHT, type VoteSummary } from '$lib/dao/dao_api';
 
-	export let approved = false;
-	export let daoSummary: ResultsSummary;
+	export let summary: VoteSummary;
 
 	let daoPercent = '0';
 
@@ -16,15 +14,7 @@
 	};
 
 	onMount(async () => {
-		const stxFor = daoSummary?.proposalData?.votesFor || 0;
-		const stxAgainst = daoSummary?.proposalData?.votesAgainst || 0;
-		const stxPower = stxFor + stxAgainst;
-		try {
-			daoPercent = ((stxFor / stxPower) * 100).toFixed(4);
-			if (daoPercent === 'NaN') daoPercent = '0';
-		} catch (err: any) {
-			daoPercent = '0';
-		}
+		daoPercent = summary.inFavour;
 	});
 </script>
 
@@ -52,7 +42,7 @@
 		</div>
 	{:else}
 		<div class="relative col-span-2 rounded-2xl border-error-600 bg-[#F4F3F0] bg-primary-01 p-8">
-			{#if approved}
+			{#if summary.passed}
 				<div class="mb-5 flex justify-between">
 					<div><img alt="correct" src={tick} /></div>
 					<div><span class="text-4xl font-extrabold">YES</span></div>
