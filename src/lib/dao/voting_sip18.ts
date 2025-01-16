@@ -1,13 +1,4 @@
-import {
-	boolCV,
-	contractPrincipalCV,
-	cvToHex,
-	PostConditionMode,
-	principalCV,
-	stringAsciiCV,
-	tupleCV,
-	uintCV
-} from '@stacks/transactions';
+import { cvToHex, PostConditionMode, stringAsciiCV, tupleCV, uintCV } from '@stacks/transactions';
 import { getConfig } from '$stores/store_helpers';
 import { ChainId } from '@stacks/network';
 import {

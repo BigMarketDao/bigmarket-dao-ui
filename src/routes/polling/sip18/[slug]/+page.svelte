@@ -21,7 +21,7 @@
 	};
 
 	const submitAll = async () => {
-		const results = await submitSip18PollVotes(poll.contract, sip18PollVotes);
+		const results = await submitSip18PollVotes(poll.votingContract, sip18PollVotes);
 		showVotes = false;
 	};
 

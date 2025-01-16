@@ -57,7 +57,7 @@
 			// 	pollVoteMessage,
 			// 	hash,
 			// 	signature.signature,
-			// 	poll.contract
+			// 	poll.votingContract
 			// );
 			// //voteMessage.timestamp = new Date().getTime(); - proove false is returned!
 			const result = await postPollVoteMessage(pollVoteObjectHash, {

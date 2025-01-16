@@ -40,8 +40,8 @@
 			network: getStacksNetwork(getConfig().VITE_NETWORK),
 			postConditions: [],
 			postConditionMode: PostConditionMode.Deny,
-			contractAddress: poll.contract.split('.')[0],
-			contractName: poll.contract.split('.')[1],
+			contractAddress: poll.votingContract.split('.')[0],
+			contractName: poll.votingContract.split('.')[1],
 			functionName: 'vote',
 			functionArgs: [
 				bufferCV(hexToBytes(poll.metadataHash)), // poll-id (poll ID)
@@ -53,7 +53,7 @@
 			],
 			onFinish: (data) => {
 				txId = data.txId;
-				localStorage.setItem('VOTED_FLAG' + getAddressId(), JSON.stringify(poll.contract));
+				localStorage.setItem('VOTED_FLAG' + getAddressId(), JSON.stringify(poll.votingContract));
 				localStorage.setItem('VOTED_TXID_3' + getAddressId(), JSON.stringify({ txId }));
 				onTxPollVote({ txId, error: false, message: 'vote sent to contract' });
 			},
