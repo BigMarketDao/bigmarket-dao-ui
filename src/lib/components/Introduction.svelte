@@ -18,7 +18,7 @@
 		<!-- <h2 class="w-full text-2xl font-semibold mb-4 text-primary-500">What to prove?</h2> -->
 		<div class="my-5">
 			<PolymarketCard
-				target={'/polling/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde021-opinion-polling'}
+				target={'/polling/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde021-market-resolution-voting'}
 				label={'New Poll'}
 				description={'Get your communities input!'}
 				title={'Opinion Polling'}

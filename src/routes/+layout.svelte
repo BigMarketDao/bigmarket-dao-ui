@@ -10,6 +10,7 @@
 	import { page } from '$app/state';
 	import { isExecutiveTeamMember } from '$lib/dao/dao_manager_helper';
 	import { fetchExchangeRates } from '$lib/stacks/rates';
+	import { getConfig } from '$stores/store_helpers';
 
 	const unsubscribe1 = sessionStore.subscribe(() => {});
 	const unsubscribe3 = configStore.subscribe(() => {});
@@ -26,6 +27,8 @@
 		if (!$sessionStore.keySets || !$sessionStore.keySets[$configStore.VITE_NETWORK])
 			await initAddresses(sessionStore);
 		const exchangeRates = await fetchExchangeRates();
+		console.log($configStore.VITE_STACKS_API);
+		console.log(getConfig().VITE_STACKS_API);
 		await initApplication(
 			$configStore.VITE_STACKS_API,
 			$configStore.VITE_MEMPOOL_API,

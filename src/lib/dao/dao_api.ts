@@ -127,7 +127,7 @@ export async function readBaseDaoEvents(daoContract: string, auth: Auth) {
 	const path = `${getConfig().VITE_BIGMARKET_API}/dao/events/extensions/${daoContract}`;
 	const response = await fetch(path, {
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', Authorization: '' },
+		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(auth)
 	});
 	if (response.status >= 400 && response.status < 500) return 'not allowed';
