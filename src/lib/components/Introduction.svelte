@@ -16,7 +16,7 @@
 	<!-- Data Collection Explanation -->
 	<div class="w-full max-w-3xl rounded-lg p-6 shadow-lg">
 		<!-- <h2 class="w-full text-2xl font-semibold mb-4 text-primary-500">What to prove?</h2> -->
-		<div class="my-5">
+		<!-- <div class="my-5">
 			<PolymarketCard
 				target={'/polling/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde021-market-resolution-voting'}
 				label={'New Poll'}
@@ -28,7 +28,7 @@
 					<PollListPublic />
 				</div>
 			</PolymarketCard>
-		</div>
+		</div> -->
 		<div class="my-5">
 			<PolymarketCard
 				target={'/dao/manager/propose/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bitcoin-dao'}
@@ -54,8 +54,8 @@
 			/> -->
 			<div class="w-full">
 				<PolymarketCard
-					target={'/dao/launcher'}
-					label={'Continue'}
+					target={'/'}
+					label={'Coming soon..'}
 					title={'DAO'}
 					description={'Launch a dao to support your project'}
 					selected={0}

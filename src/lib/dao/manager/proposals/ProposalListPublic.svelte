@@ -17,16 +17,20 @@
 
 	<div class="">
 		{#each proposalsProposed as proposal}
-			<div class="grid w-full grid-cols-6 justify-stretch">
-				<ProposalGridItem {proposal} admin={false} />
-			</div>
+			{#if proposal.indexOf('bdp000-bootstrap') === -1}
+				<div class="grid w-full grid-cols-6 justify-stretch">
+					<ProposalGridItem {proposal} admin={false} />
+				</div>
+			{/if}
 		{/each}
 	</div>
 	<div class="">
 		{#each proposalsExecuted as proposal}
-			<div class="grid w-full grid-cols-6 justify-stretch">
-				<ProposalGridItem {proposal} admin={false} />
-			</div>
+			{#if proposal.indexOf('bdp000-bootstrap') === -1}
+				<div class="grid w-full grid-cols-6 justify-stretch">
+					<ProposalGridItem {proposal} admin={false} />
+				</div>
+			{/if}
 		{/each}
 	</div>
 </div>

@@ -16,6 +16,6 @@ export function setConfigByUrl(search: URLSearchParams) {
 	if (newNetwork) {
 		switchConfig(newNetwork);
 	} else {
-		switchConfig('devnet');
+		switchConfig('testnet');
 	}
 }

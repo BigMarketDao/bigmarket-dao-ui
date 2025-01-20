@@ -32,7 +32,7 @@
 			<div class="py-0">
 				<DaoBanner {contractId} />
 				<h1 class="text-2xl">Make a Proposal</h1>
-				<p class="py-2">Proposals, clarity smart contracts, come in 2 forms;</p>
+				<!-- <p class="py-2">Proposals, clarity smart contracts, come in 2 forms;</p>
 				<ol class="mb-8 ps-5">
 					<li class="list-decimal">
 						non operational - for conducting votes and polls e.g. sip votes
@@ -40,7 +40,7 @@
 					<li class="list-decimal">
 						operational - for changing the DAO configuration - adding/enabling/disabling extensions
 					</li>
-				</ol>
+				</ol> -->
 				{#if contractId}
 					<MakeProposal daoContractAddress={contractId.split('.')[0]} />
 				{/if}
