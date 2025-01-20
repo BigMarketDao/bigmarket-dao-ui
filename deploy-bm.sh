@@ -24,7 +24,7 @@ function __build() {
 
 function __pushcode() {
   echo "\n- deploying from pipeline build \n";
-  rsync -aP -e "ssh  -p $PORT" $PATH_DEPLOY/* static/* bob@$SERVER:/var/www/bigmarket
+  rsync -aP -e "ssh  -p $PORT" $PATH_DEPLOY/* static/* bob@$SERVER:/var/www/bitcoin-dao
 }
 
 BUILD_PATH=./
