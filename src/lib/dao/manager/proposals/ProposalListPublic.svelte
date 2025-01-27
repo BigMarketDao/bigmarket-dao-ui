@@ -17,7 +17,7 @@
 
 	<div class="">
 		{#each proposalsProposed as proposal}
-			{#if proposal.indexOf('bdp000-bootstrap') === -1}
+			{#if proposal.proposal.indexOf('bdp000-bootstrap') === -1}
 				<div class="grid w-full grid-cols-6 justify-stretch">
 					<ProposalGridItem {proposal} admin={false} />
 				</div>
@@ -26,7 +26,7 @@
 	</div>
 	<div class="">
 		{#each proposalsExecuted as proposal}
-			{#if proposal.indexOf('bdp000-bootstrap') === -1}
+			{#if proposal.proposal.indexOf('bdp000-bootstrap') === -1}
 				<div class="grid w-full grid-cols-6 justify-stretch">
 					<ProposalGridItem {proposal} admin={false} />
 				</div>

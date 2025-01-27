@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type MerkleTree from 'merkletreejs';
-	import { generateMerkleTree } from '../polling';
+	import { generateMerkleTreeUsingStandardPrincipal } from '@mijoco/stx_helpers/dist/index';
 
 	export let onGenerateRoot: any;
 	let contractIds: Array<string> = []; // List of added contract IDs
@@ -25,7 +25,7 @@
 
 	function generateRoot() {
 		if (contractIds && contractIds.length > 0) {
-			const tree: MerkleTree = generateMerkleTree(contractIds);
+			const tree: MerkleTree = generateMerkleTreeUsingStandardPrincipal(contractIds);
 			const root = tree.getRoot().toString('hex');
 			onGenerateRoot(root, contractIds);
 		} else {

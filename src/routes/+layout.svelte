@@ -29,15 +29,27 @@
 		const exchangeRates = await fetchExchangeRates();
 		console.log($configStore.VITE_STACKS_API);
 		console.log(getConfig().VITE_STACKS_API);
-		await initApplication(
-			$configStore.VITE_STACKS_API,
-			$configStore.VITE_MEMPOOL_API,
-			$configStore.VITE_NETWORK,
-			sessionStore,
-			exchangeRates,
-			'$configStore.VITE_SBTC_CONTRACT_ID',
-			getUserData()
-		);
+		if (!$sessionStore.balances) {
+			await initApplication(
+				$configStore.VITE_STACKS_API,
+				$configStore.VITE_MEMPOOL_API,
+				$configStore.VITE_NETWORK,
+				sessionStore,
+				exchangeRates,
+				'$configStore.VITE_SBTC_CONTRACT_ID',
+				getUserData()
+			);
+		} else {
+			initApplication(
+				$configStore.VITE_STACKS_API,
+				$configStore.VITE_MEMPOOL_API,
+				$configStore.VITE_NETWORK,
+				sessionStore,
+				exchangeRates,
+				'$configStore.VITE_SBTC_CONTRACT_ID',
+				getUserData()
+			);
+		}
 		const daoContractId = page.params.slug;
 		const emTeamMam = await isExecutiveTeamMember(undefined, getStxAddress());
 		$sessionStore.userSettings.executiveTeamMember = emTeamMam?.executiveTeamMember || false;

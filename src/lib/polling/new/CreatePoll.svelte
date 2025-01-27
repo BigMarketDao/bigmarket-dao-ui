@@ -2,24 +2,8 @@
 	import { sessionStore } from '$stores/stores';
 	import { onMount } from 'svelte';
 	import { configStore } from '$stores/stores_config';
-	import {
-		bufferCV,
-		noneCV,
-		Pc,
-		PostConditionMode,
-		principalCV,
-		someCV,
-		tupleCV,
-		uintCV
-	} from '@stacks/transactions';
-	import {
-		dataHashSip18,
-		getStacksNetwork,
-		opinionPollToTupleCV,
-		type Auth,
-		type OpinionPoll,
-		type StoredOpinionPoll
-	} from '@mijoco/stx_helpers/dist/index';
+	import { bufferCV, noneCV, Pc, PostConditionMode, principalCV, someCV, tupleCV, uintCV } from '@stacks/transactions';
+	import { dataHashSip18, getStacksNetwork, opinionPollToTupleCV, type Auth, type OpinionPoll, type StoredOpinionPoll } from '@mijoco/stx_helpers/dist/index';
 	import { openContractCall } from '@stacks/connect';
 	import { postCreatePollMessage } from '$lib/polling/polling';
 	import { getStxAddress, isLoggedIn, loginStacksFromHeader } from '$lib/stacks/stacks-connect';
@@ -93,20 +77,8 @@
 
 	const getSignature = async () => {
 		examplePoll.createdAt = new Date().getTime();
-		pollMessage = opinionPollToTupleCV(
-			examplePoll.name,
-			examplePoll.description,
-			examplePoll.proposer,
-			examplePoll.createdAt,
-			examplePoll.startBurnHeight,
-			examplePoll.endBurnHeight
-		);
-		const dataHash = dataHashSip18(
-			getConfig().VITE_NETWORK,
-			getConfig().VITE_PUBLIC_APP_NAME,
-			getConfig().VITE_PUBLIC_APP_VERSION,
-			pollMessage
-		);
+		pollMessage = opinionPollToTupleCV(examplePoll.createdAt, examplePoll.name, examplePoll.proposer, examplePoll.token);
+		const dataHash = dataHashSip18(getConfig().VITE_NETWORK, getConfig().VITE_PUBLIC_APP_NAME, getConfig().VITE_PUBLIC_APP_VERSION, pollMessage);
 		await signAdminMessage(async function (auth: Auth) {
 			const poll: StoredOpinionPoll = {
 				...examplePoll,
@@ -126,25 +98,20 @@
 		});
 	};
 
-	const handleGenerateRoot = (
-		newMerkelRoot: string | undefined,
-		newContractIds: Array<string> | undefined
-	) => {
+	const handleGenerateRoot = (newMerkelRoot: string | undefined, newContractIds: Array<string> | undefined) => {
 		merkelRoot = newMerkelRoot;
 		contractIds = newContractIds;
 	};
 
 	const confirmPoll = async (dataHash: string) => {
 		const metadataHash = bufferCV(hexToBytes(dataHash)); // Assumes the hash is a string of 32 bytes in hex format
-		const merkel = merkelRoot ? someCV(bufferCV(hexToBytes(merkelRoot))) : noneCV();
+		const merkle = merkelRoot ? someCV(bufferCV(hexToBytes(merkelRoot))) : noneCV();
 		const pollData = tupleCV({
 			'end-burn-height': uintCV(template.endBurnHeight),
 			'start-burn-height': uintCV(template.startBurnHeight)
 		});
 
-		const postCondition = Pc.principal(getStxAddress())
-			.willSendEq($configStore.VITE_POLL_PAYMENT_USTX)
-			.ustx();
+		const postCondition = Pc.principal(getStxAddress()).willSendEq($configStore.VITE_POLL_PAYMENT_USTX).ustx();
 		await openContractCall({
 			network: getStacksNetwork($configStore.VITE_NETWORK),
 			postConditions: [postCondition],
@@ -152,7 +119,7 @@
 			contractAddress: pollContract.split('.')[0],
 			contractName: pollContract.split('.')[1],
 			functionName: 'add-opinion-poll',
-			functionArgs: [metadataHash, pollData, merkel],
+			functionArgs: [metadataHash, pollData, merkle],
 			onFinish: (data: any) => {
 				txId = data.txId;
 				console.log('finished contract call!', data);
@@ -176,13 +143,9 @@
 			<div class="order-2 flex w-[350px] flex-col gap-y-5">
 				<h1 class="text-2xl">Bitcoin-Dao</h1>
 				<p>
-					A charge of <span class="text-bitcoinorange">{fmtMicroToStx(pollSetupFee)} STX</span> is required
-					to set up an opinion polls.
+					A charge of <span class="text-bitcoinorange">{fmtMicroToStx(pollSetupFee)} STX</span> is required to set up an opinion polls.
 				</p>
-				<p>
-					Fees are disbursed to the Bitcoin DAO treasury and used to support ongoing development
-					efforts on Stacks / Bitcoin layer 2 DAO community.
-				</p>
+				<p>Fees are disbursed to the Bitcoin DAO treasury and used to support ongoing development efforts on Stacks / Bitcoin layer 2 DAO community.</p>
 				<ul class="ms-5">
 					<li class="list-disc">Free for end users</li>
 					<li class="list-disc">Free social integrations</li>
@@ -199,49 +162,23 @@
 								<h2 class="text-1xl font-bold">Poll info</h2>
 								<div class="bottom-1 mb-2 flex w-full flex-col justify-start">
 									<label for="project-name" class="">name of poll</label>
-									<input
-										id="project-name"
-										class="rounded-lg border-gray-800 p-2 text-black"
-										bind:value={template.name}
-										type="text"
-										aria-describedby="projectName"
-									/>
+									<input id="project-name" class="rounded-lg border-gray-800 p-2 text-black" bind:value={template.name} type="text" aria-describedby="projectName" />
 								</div>
 								<div class="bottom-1 mb-2 flex w-full flex-col justify-start">
 									<label for="project-name" class="">enter short description</label>
-									<input
-										id="project-name"
-										class="rounded-lg border-gray-800 p-2 text-black"
-										bind:value={template.description}
-										type="text"
-										aria-describedby="projectName"
-									/>
+									<input id="project-name" class="rounded-lg border-gray-800 p-2 text-black" bind:value={template.description} type="text" aria-describedby="projectName" />
 								</div>
 							</div>
 							<div class="">
 								<h2 class="text-1xl font-bold">Start / end</h2>
 								<p class="text-sm font-extralight">polls run in bitcoin block times</p>
 								<div class="bottom-1 mb-2 flex w-full flex-col justify-start">
-									<label for="project-start-height" class=""
-										>Start height (now plus {startDelay})</label
-									>
-									<input
-										id="project-start-height"
-										class="rounded-lg border-gray-800 p-2 text-black"
-										bind:value={template.startBurnHeight}
-										type="text"
-										aria-describedby="project-start-height"
-									/>
+									<label for="project-start-height" class="">Start height (now plus {startDelay})</label>
+									<input id="project-start-height" class="rounded-lg border-gray-800 p-2 text-black" bind:value={template.startBurnHeight} type="text" aria-describedby="project-start-height" />
 								</div>
 								<div class="bottom-1 mb-2 flex w-full flex-col justify-start">
 									<label for="project-end-height" class="">End height (now plus {endDelay})</label>
-									<input
-										id="project-end-height"
-										class="rounded-lg border-gray-800 p-2 text-black"
-										bind:value={template.endBurnHeight}
-										type="text"
-										aria-describedby="project-end-height"
-									/>
+									<input id="project-end-height" class="rounded-lg border-gray-800 p-2 text-black" bind:value={template.endBurnHeight} type="text" aria-describedby="project-end-height" />
 								</div>
 							</div>
 							<div class="">
@@ -251,33 +188,15 @@
 								<h2 class="text-1xl font-bold">Social Integrations</h2>
 								<div class="bottom-1 mb-2 flex w-full flex-col justify-start">
 									<label for="project-handle" class="">X project handle</label>
-									<input
-										id="project-handle"
-										class="rounded-lg border-gray-800 p-2 text-black"
-										bind:value={template.social.twitter.projectHandle}
-										type="text"
-										aria-describedby="project-handle"
-									/>
+									<input id="project-handle" class="rounded-lg border-gray-800 p-2 text-black" bind:value={template.social.twitter.projectHandle} type="text" aria-describedby="project-handle" />
 								</div>
 								<div class="bottom-1 mb-2 flex w-full flex-col justify-start">
 									<label for="project-name" class="">Discord server Id</label>
-									<input
-										id="project-serverId"
-										class="rounded-lg border-gray-800 p-2 text-black"
-										bind:value={template.social.discord.serverId}
-										type="text"
-										aria-describedby="project-serverId"
-									/>
+									<input id="project-serverId" class="rounded-lg border-gray-800 p-2 text-black" bind:value={template.social.discord.serverId} type="text" aria-describedby="project-serverId" />
 								</div>
 								<div class="bottom-1 mb-2 flex w-full flex-col justify-start">
 									<label for="project-name" class="">Website Url</label>
-									<input
-										id="project-website"
-										class="rounded-lg border-gray-800 p-2 text-black"
-										bind:value={template.social.website.url}
-										type="text"
-										aria-describedby="project-website"
-									/>
+									<input id="project-website" class="rounded-lg border-gray-800 p-2 text-black" bind:value={template.social.website.url} type="text" aria-describedby="project-website" />
 								</div>
 							</div>
 							<div class="flex w-full justify-start gap-x-4">

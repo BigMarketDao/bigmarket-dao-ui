@@ -3,7 +3,7 @@ export interface DaoConfig {
 	VITE_DAO_BASE_CONTRACTS: string;
 	VITE_DOA: string;
 	VITE_DOA_PROPOSAL: string;
-	VITE_DOA_SNAPSHOT_VOTING_EXTENSION: string;
+	VITE_DAO_MARKET_RESOLUTION_VOTING: string;
 	VITE_DOA_PROPOSAL_VOTING_EXTENSION: string;
 	VITE_DOA_FUNDED_SUBMISSION_EXTENSION: string;
 	VITE_DOA_EMERGENCY_EXECUTE_EXTENSION: string;
@@ -15,7 +15,7 @@ export const config_dao: { [key: string]: DaoConfig } = {
 		VITE_DOA: 'bitcoin-dao',
 		VITE_DAO_BASE_CONTRACTS: 'ecosystem-dao,bitcoin-dao',
 		VITE_DOA_PROPOSAL: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bdp001-sip-021-test-01',
-		VITE_DOA_SNAPSHOT_VOTING_EXTENSION: 'bde007-snapshot-proposal-voting',
+		VITE_DAO_MARKET_RESOLUTION_VOTING: 'bde021-market-resolution-voting',
 		VITE_DOA_PROPOSAL_VOTING_EXTENSION: 'bde007-snapshot-proposal-voting',
 		VITE_DOA_FUNDED_SUBMISSION_EXTENSION: 'bde002-proposal-submission',
 		VITE_DOA_EMERGENCY_EXECUTE_EXTENSION: 'bde004-emergency-execute'
@@ -25,7 +25,7 @@ export const config_dao: { [key: string]: DaoConfig } = {
 		VITE_DAO_BASE_CONTRACTS: 'ecosystem-dao,bitcoin-dao',
 		VITE_DOA: 'bitcoin-dao',
 		VITE_DOA_PROPOSAL: 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY.bdp001-sip-021-nakamoto',
-		VITE_DOA_SNAPSHOT_VOTING_EXTENSION: 'bde007-snapshot-proposal-voting',
+		VITE_DAO_MARKET_RESOLUTION_VOTING: 'bde021-market-resolution-voting',
 		VITE_DOA_PROPOSAL_VOTING_EXTENSION: 'bde007-snapshot-proposal-voting',
 		VITE_DOA_FUNDED_SUBMISSION_EXTENSION: 'bde008-flexible-funded-submission',
 		VITE_DOA_EMERGENCY_EXECUTE_EXTENSION: 'bde004-emergency-execute'
@@ -35,7 +35,7 @@ export const config_dao: { [key: string]: DaoConfig } = {
 		VITE_DAO_BASE_CONTRACTS: 'ecosystem-dao,bitcoin-dao',
 		VITE_DOA: 'bitcoin-dao',
 		VITE_DOA_PROPOSAL: 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z.bdp001-sip-021-nakamoto',
-		VITE_DOA_SNAPSHOT_VOTING_EXTENSION: 'bde007-snapshot-proposal-voting',
+		VITE_DAO_MARKET_RESOLUTION_VOTING: 'bde021-market-resolution-voting',
 		VITE_DOA_PROPOSAL_VOTING_EXTENSION: 'bde007-snapshot-proposal-voting',
 		VITE_DOA_FUNDED_SUBMISSION_EXTENSION: 'bde008-flexible-funded-submission',
 		VITE_DOA_EMERGENCY_EXECUTE_EXTENSION: 'bde004-emergency-execute'

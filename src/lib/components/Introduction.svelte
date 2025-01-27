@@ -1,6 +1,7 @@
 <script>
 	import ProposalListPublic from '$lib/dao/manager/proposals/ProposalListPublic.svelte';
 	import PollListPublic from '$lib/polling/polls/PollListPublic.svelte';
+	import { getDaoConfig } from '$stores/store_helpers';
 	import { configDaoStore } from '$stores/stores_config_dao';
 	import PolymarketCard from './common/PolymarketCard.svelte';
 </script>
@@ -31,7 +32,7 @@
 		</div> -->
 		<div class="my-5">
 			<PolymarketCard
-				target={'/dao/manager/propose/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bitcoin-dao'}
+				target={`/dao/manager/propose/${getDaoConfig().VITE_DOA_DEPLOYER}.bitcoin-dao`}
 				label={'Propose Something'}
 				description={'Something to propose to improve the DAO?'}
 				title={'Make a Proposal'}

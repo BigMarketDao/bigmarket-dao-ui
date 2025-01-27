@@ -112,30 +112,6 @@ export async function signNewPoll(poll: TupleCV<TupleData<ClarityValue>>, callba
 	});
 }
 
-// function sha256(contractId: string): string {
-// 	const encoder = new TextEncoder(); // Creates a new TextEncoder
-// 	const contractIdBytes = encoder.encode(contractId); // Encodes the string into a Uint8Array
-// 	return bytesToHex(hashSha256Sync(contractIdBytes));
-// }
-
-export function generateMerkleTree(tokens: Array<string>) {
-	const leaves = tokens.map((x) => sha256(x));
-	const tree = new MerkleTree(leaves, hashSha256Sync);
-	// const root = tree.getRoot().toString('hex');
-	return tree;
-}
-
-export function generateMerkleProof(tree: MerkleTree, token: string) {
-	const root = tree.getRoot().toString('hex');
-	const leaf = bytesToHex(sha256(token));
-	const proof = tree.getProof(leaf);
-	const isValid = tree.verify(proof, leaf, root);
-	console.log('Merkle Root:', root);
-	console.log('Proof:', proof);
-	console.log('Is valid proof:', isValid);
-	return isValid;
-}
-
 export async function newPollVoteMessage(
 	poll: PollCreateEvent,
 	vote: boolean,
@@ -144,7 +120,8 @@ export async function newPollVoteMessage(
 	const ts = await fetchTimestamp();
 	return {
 		attestation: vote ? 'I agree with the statement' : 'I disagree with the statement',
-		'poll-id': poll.metadataHash,
+		'poll-id': poll.pollId,
+		'market-data-hash': poll.metadataHash,
 		timestamp: ts,
 		vote,
 		voter,

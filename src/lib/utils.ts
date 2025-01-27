@@ -53,10 +53,6 @@ export function fmtMicroToStx(amountStx: number) {
 	return converted;
 }
 
-export function fmtStxMicro(amountStx: number) {
-	return (Math.round(amountStx) * stxPrecision * stxPrecision) / stxPrecision;
-}
-
 export function tsToTime(updated: number | undefined) {
 	let d = new Date();
 	if (updated) d = new Date(updated);
@@ -99,10 +95,7 @@ export function truncateEnd(stringy?: string, amount?: number) {
 	return '..' + stringy.substring(stringy.length - amount);
 }
 
-export function compareCurrencies(
-	a: { value: string; name: string },
-	b: { value: string; name: string }
-) {
+export function compareCurrencies(a: { value: string; name: string }, b: { value: string; name: string }) {
 	if (a.value < b.value) {
 		return -1;
 	}
