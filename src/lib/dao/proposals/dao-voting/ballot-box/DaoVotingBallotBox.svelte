@@ -1,18 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import {
-		PostConditionMode,
-		contractPrincipalCV,
-		falseCV,
-		trueCV,
-		uintCV
-	} from '@stacks/transactions';
+	import { Cl, Pc, PostConditionMode, contractPrincipalCV, falseCV, noneCV, someCV, trueCV, uintCV } from '@stacks/transactions';
 	import { showContractCall } from '@stacks/connect';
 	import { sessionStore } from '$stores/stores';
 	import type { VotingEventProposeProposal } from '@mijoco/stx_helpers/dist/index';
 	import { getStacksNetwork, getTransaction } from '@mijoco/stx_helpers/dist/stacks-node';
-	import { getConfig } from '$stores/store_helpers';
-	import { explorerTxUrl, getAddressId, isLoggedIn } from '$lib/stacks/stacks-connect';
+	import { getConfig, getDaoConfig } from '$stores/store_helpers';
+	import { explorerTxUrl, getAddressId, getStxAddress, isLoggedIn } from '$lib/stacks/stacks-connect';
 	import ChainUtils from '$lib/dao/ChainUtils';
 	import Banner from '$lib/components/ui/Banner.svelte';
 	import { fmtMicroToStx, fmtMicroToStxFormatted } from '$lib/utils';
@@ -36,13 +30,12 @@
 			errorMessage = 'Please connect your wallet to vote';
 			return;
 		}
-		if (amountStx === 0 || amountStx < 1) {
-			errorMessage = 'Minimum voting power is 1 STX';
-			return;
-		}
+		// if (amountStx === 0 || amountStx < 1) {
+		// 	errorMessage = 'Minimum voting power is 1 STX';
+		// 	return;
+		// }
 		if (amountStx > votingPower) {
-			errorMessage =
-				'Maximum voting power is ' + balanceAtHeightF + ' STX (your balance when voting opened)';
+			errorMessage = 'Maximum voting power is ' + balanceAtHeightF + ' STX';
 			amountStx = votingPower;
 			return;
 		}
@@ -53,18 +46,29 @@
 		// const amountUSTX = ChainUtils.toOnChainAmount(amount)
 		const amountUSTX = ChainUtils.toOnChainAmount(amountStx);
 		const amountCV = uintCV(amountUSTX);
-		const proposalCV = contractPrincipalCV(
-			proposal.proposal.split('.')[0],
-			proposal.proposal.split('.')[1]
-		);
+		const votingContractName = proposal.votingContract.split('.')[1];
+		const proposalCV = contractPrincipalCV(proposal.proposal.split('.')[0], proposal.proposal.split('.')[1]);
+		const reclaimProposalCV = someCV(contractPrincipalCV(proposal.proposal.split('.')[0], proposal.proposal.split('.')[1]));
+		let functionArgs;
+		if (votingContractName === 'bde001-proposal-voting-tokenised') {
+			functionArgs = [amountCV, forCV, proposalCV, noneCV()];
+		} else {
+			functionArgs = [amountCV, forCV, proposalCV];
+		}
+
+		const postConditions = [];
+		const formattedToken = (getDaoConfig().VITE_DOA_DEPLOYER + '.' + getDaoConfig().VITE_DAO_GOVERNANCE_TOKEN) as `${string}.${string}`;
+		const postConditionFt = Pc.principal(getStxAddress()).willSendEq(amountUSTX).ft(formattedToken, 'bdg-token');
+		postConditions.push(postConditionFt);
+
 		await showContractCall({
 			network: getStacksNetwork(getConfig().VITE_NETWORK),
-			postConditions: [],
+			postConditions,
 			postConditionMode: PostConditionMode.Deny,
 			contractAddress: deployer,
 			contractName: proposal.votingContract.split('.')[1],
 			functionName: 'vote',
-			functionArgs: [amountCV, forCV, proposalCV],
+			functionArgs,
 			onFinish: (data) => {
 				txId = data.txId;
 				localStorage.setItem('VOTED_FLAG' + getAddressId(), JSON.stringify(proposal.proposal));
@@ -92,11 +96,7 @@
 			if (txIdObj) {
 				const potentialTxId = JSON.parse(txIdObj).txId;
 				const tx = await lookupTransaction(potentialTxId);
-				if (
-					tx &&
-					tx.tx_status === 'pending' &&
-					tx.sender_address === $sessionStore.keySets[getConfig().VITE_NETWORK].stxAddress
-				) {
+				if (tx && tx.tx_status === 'pending' && tx.sender_address === $sessionStore.keySets[getConfig().VITE_NETWORK].stxAddress) {
 					txId = potentialTxId;
 				} else {
 					if (tx.sender_address === $sessionStore.keySets[getConfig().VITE_NETWORK].stxAddress) {
@@ -113,12 +113,7 @@
 	<div class="flex flex-col gap-y-4">
 		{#if txId}
 			<div class="mb-3 max-w-xl">
-				<Banner
-					bannerType={'warning'}
-					message={'Your vote is in the mempool and should be confirmed soon. See <a href="' +
-						explorerUrl +
-						'" target="_blank">explorer!</a>'}
-				/>
+				<Banner bannerType={'warning'} message={'Your vote is in the mempool and should be confirmed soon. See <a href="' + explorerUrl + '" target="_blank">explorer!</a>'} />
 			</div>
 		{:else}
 			<div class="flex w-full justify-start gap-x-4">

@@ -7,18 +7,18 @@
 	import { page } from '$app/state';
 	import { getContractDeploymentTxId, isDaoConstructed } from '$lib/dao/dao_manager_helper';
 
-	export let contractId: string;
+	export let daoContractId: string;
 	let txId: string | undefined;
 	let constructed: boolean;
 
 	const constructDao = async () => {
-		const bootstrap = contractPrincipalCV(contractId.split('.')[0], 'bdp000-bootstrap');
+		const bootstrap = contractPrincipalCV(daoContractId.split('.')[0], 'bdp000-bootstrap');
 		await openContractCall({
 			network: getStxNetwork(),
 			postConditions: [],
 			postConditionMode: PostConditionMode.Deny,
-			contractAddress: contractId.split('.')[0],
-			contractName: contractId.split('.')[1],
+			contractAddress: daoContractId.split('.')[0],
+			contractName: daoContractId.split('.')[1],
 			functionName: 'construct',
 			functionArgs: [bootstrap],
 			onFinish: (data: any) => {
@@ -32,17 +32,14 @@
 	};
 
 	onMount(async () => {
-		txId = await getContractDeploymentTxId(contractId);
-		constructed = await isDaoConstructed(contractId);
+		txId = await getContractDeploymentTxId(daoContractId);
+		constructed = await isDaoConstructed(daoContractId);
 	});
 </script>
 
 <svelte:head>
 	<title>Bitcoin DAO</title>
-	<meta
-		name="description"
-		content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin"
-	/>
+	<meta name="description" content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin" />
 </svelte:head>
 
 <div class="mx-auto w-full max-w-7xl py-4 md:px-6">

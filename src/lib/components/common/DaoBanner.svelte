@@ -2,17 +2,11 @@
 	import { truncate } from '$lib/utils';
 	import Banner from '../ui/Banner.svelte';
 
-	export let contractId: string;
+	export let daoContractId: string;
 </script>
 
-{#if contractId}
+{#if daoContractId}
 	<div class="mb-8 mt-0">
-		<Banner
-			bannerType={'warning'}
-			message={'Dao contract: ' +
-				truncate(contractId.split('.')[0]) +
-				'.' +
-				contractId.split('.')[1]}
-		/>
+		<Banner bannerType={'warning'} message={'Dao contract: ' + truncate(daoContractId.split('.')[0]) + '.' + daoContractId.split('.')[1]} />
 	</div>
 {/if}

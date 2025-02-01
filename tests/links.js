@@ -109,9 +109,9 @@ export const sui_standards = [
 export const bitcoinDao = [
 	'https://github.com/radicleart/bitcoin-dao/blob/clarigen-tests/contracts/bitcoin-dao.clar',
 	'https://github.com/radicleart/bitcoin-dao/blob/clarigen-tests/contracts/extensions/bde000-governance-token.clar',
-	'https://github.com/radicleart/bitcoin-dao/blob/clarigen-tests/contracts/extensions/bde001-proposal-voting.clar',
+	'https://github.com/radicleart/bitcoin-dao/blob/clarigen-tests/contracts/extensions/bde001-proposal-voting-tokenised.clar',
 	'https://github.com/radicleart/bitcoin-dao/blob/clarigen-tests/contracts/extensions/bde002-proposal-submission.clar',
-	'https://github.com/radicleart/bitcoin-dao/blob/clarigen-tests/contracts/extensions/bde003-core-proposals.clar',
+	'https://github.com/radicleart/bitcoin-dao/blob/clarigen-tests/contracts/extensions/bde003-core-proposals-tokenised.clar',
 	'https://github.com/radicleart/bitcoin-dao/blob/clarigen-tests/contracts/extensions/bde004-core-execute.clar',
 	'https://github.com/radicleart/bitcoin-dao/blob/clarigen-tests/contracts/extensions/bde006-treasury.clar'
 ];

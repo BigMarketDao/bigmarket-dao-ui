@@ -5,7 +5,7 @@
 	import ClaritySytaxHighlighter from '$lib/components/ui/ClaritySytaxHighlighter.svelte';
 	import ExtensionGridItem from '$lib/dao/manager/extensions/ExtensionGridItem.svelte';
 
-	export let contractId: string;
+	export let daoContractId: string;
 	let extensions: Array<any> = [];
 	let showModal = false;
 	let item: any;
@@ -17,7 +17,7 @@
 	};
 
 	onMount(async () => {
-		extensions = await fetchExtensions(contractId);
+		extensions = await fetchExtensions(daoContractId);
 	});
 </script>
 
@@ -30,10 +30,7 @@
 
 <div class="flex flex-col gap-y-5">
 	<h1 class=" text-2xl">DAO Extensions</h1>
-	<p class="strapline">
-		The following are contracts which are extensions registered for this dao. They may be changed,
-		activated and deactivated via accepted proposals.
-	</p>
+	<p class="strapline">The following are contracts which are extensions registered for this dao. They may be changed, activated and deactivated via accepted proposals.</p>
 
 	{#each extensions as extension}
 		<div class="grid w-full grid-cols-6 justify-stretch">

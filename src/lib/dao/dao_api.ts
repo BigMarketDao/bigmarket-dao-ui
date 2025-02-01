@@ -3,6 +3,9 @@ import {
 	callContractReadOnly,
 	voteMessageToTupleCV,
 	type Auth,
+	type ContractBalances,
+	type DaoOverview,
+	type PredictionContractData,
 	type ProposalData,
 	type VoteMessage,
 	type VotingEventProposeProposal,
@@ -14,6 +17,13 @@ import { bufferCV, contractPrincipalCV, principalCV, serializeCV } from '@stacks
 export const NAKAMOTO_VOTE_START_HEIGHT = 829750 + 100;
 export const NAKAMOTO_VOTE_STOPS_HEIGHT = 833950;
 export const daoVotingSupported = true;
+
+export async function getDaoOverview(): Promise<DaoOverview> {
+	const path = `${getConfig().VITE_BIGMARKET_API}/pm/market-dao-data`;
+	const response = await fetch(path);
+	const res = await response.json();
+	return res;
+}
 
 export async function findDaoVotes(proposalId: string) {
 	const path = `${getConfig().VITE_BIGMARKET_API}/dao/proposals/votes/${proposalId}`;
@@ -30,10 +40,7 @@ export type VoteSummary = {
 	passed: boolean;
 	customMajority: number;
 };
-export function summarizeVotes(
-	votes: Array<VotingEventVoteOnProposal>,
-	proposalData: ProposalData
-): VoteSummary {
+export function summarizeVotes(votes: Array<VotingEventVoteOnProposal>, proposalData: ProposalData): VoteSummary {
 	const summary = votes.reduce(
 		(acc, vote) => {
 			if (vote.for) {
@@ -96,17 +103,8 @@ export function summarizeVotes(
 // 	}
 // }
 
-export async function verifySignature(
-	vote: VoteMessage,
-	hash: string,
-	signature: string,
-	votingContract: string
-): Promise<{ result: boolean }> {
-	const functionArgs = [
-		`0x${serializeCV(bufferCV(hexToBytes(hash)))}`,
-		`0x${serializeCV(bufferCV(hexToBytes(signature)))}`,
-		`0x${serializeCV(principalCV(vote.voter))}`
-	];
+export async function verifySignature(vote: VoteMessage, hash: string, signature: string, votingContract: string): Promise<{ result: boolean }> {
+	const functionArgs = [`0x${serializeCV(bufferCV(hexToBytes(hash)))}`, `0x${serializeCV(bufferCV(hexToBytes(signature)))}`, `0x${serializeCV(principalCV(vote.voter))}`];
 
 	const data = {
 		contractAddress: votingContract.split('.')[0],

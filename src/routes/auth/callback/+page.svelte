@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Introduction from '$lib/components/Introduction.svelte';
-	import type { SessionStore } from '@mijoco/stx_helpers/dist/index';
 	import { onMount } from 'svelte';
 
 	onMount(async () => {
@@ -9,10 +8,6 @@
 			const urlParams = new URLSearchParams(window.location.search);
 			const token = urlParams.get('token');
 			if (token) {
-				// sessionStore.update((conf: SessionStore) => {
-				// 	conf.jwtToken = token;
-				// 	return conf;
-				// });
 				goto('/');
 			} else {
 				console.error('No token found in URL');

@@ -46,18 +46,11 @@
 		const proposalStartCV = uintCV(proposalStart);
 		const paramDurationCV = uintCV(proposalDuration);
 		const customMajorityCV = someCV(uintCV(8000));
-		const votingContractCV = contractPrincipalCV(
-			contractId.split('.')[0],
-			'bde001-proposal-voting'
-		);
+		const votingContractCV = contractPrincipalCV(contractId.split('.')[0], 'bde001-proposal-voting-tokenised');
 		const proposalCV = contractPrincipalCV(contractId.split('.')[0], contractId.split('.')[1]);
-		let functionArgs = [
-			votingContractCV,
-			proposalCV,
-			proposalStartCV,
-			paramDurationCV,
-			customMajorityCV
-		];
+		let functionArgs = [proposalCV, proposalStartCV, paramDurationCV, customMajorityCV];
+		console.log('submissionContractId: ' + submissionContractId);
+		console.log('getStacksNetwork: ', getStacksNetwork(getConfig().VITE_NETWORK));
 		await openContractCall({
 			network: getStacksNetwork(getConfig().VITE_NETWORK),
 			postConditions: [],
@@ -65,7 +58,7 @@
 			contractAddress: submissionContractId.split('.')[0],
 			contractName: submissionContractId.split('.')[1],
 			functionName: 'core-propose',
-			functionArgs: functionArgs,
+			functionArgs,
 			onFinish: async (data) => {
 				txId = data.txId;
 			},
@@ -89,20 +82,9 @@
 		inited = true;
 	});
 
-	$: explorerUrl =
-		getConfig().VITE_STACKS_EXPLORER + '/txid/' + txId + '?chain=' + getConfig().VITE_NETWORK;
-	$: startHeightMessage =
-		'Voting starts at ' +
-		proposalStart +
-		' in ' +
-		fmtNumber(proposalStart - burnHeightNow) +
-		' bitcoin blocks';
-	$: durationMessage =
-		'The voting window is ' +
-		proposalDuration +
-		' blocks, roughly ' +
-		(proposalDuration / 144).toFixed(2) +
-		' days, after voting starts.';
+	$: explorerUrl = getConfig().VITE_STACKS_EXPLORER + '/txid/' + txId + '?chain=' + getConfig().VITE_NETWORK;
+	$: startHeightMessage = 'Voting starts at ' + proposalStart + ' in ' + fmtNumber(proposalStart - burnHeightNow) + ' bitcoin blocks';
+	$: durationMessage = 'The voting window is ' + proposalDuration + ' blocks, roughly ' + (proposalDuration / 144).toFixed(2) + ' days, after voting starts.';
 </script>
 
 {#if inited}
@@ -126,39 +108,13 @@
 						{#key componentKey}
 							<div class="w-full">
 								<label class="block" for="start-block">voting will begin at block</label>
-								<input
-									on:change={() => refreshClocks()}
-									bind:value={proposalStart}
-									type="number"
-									id="start-block"
-									class={'h-[40px] w-60 rounded-lg border border-gray-400 px-2 py-1 text-black'}
-									aria-describedby="Contribution"
-								/>
-								<span class="text-sm text-[#131416]/[0.64]"
-									>approx start <Countdown
-										endBlock={proposalStart - burnHeightNow}
-										scaleFactor={1}
-									/></span
-								>
+								<input on:change={() => refreshClocks()} bind:value={proposalStart} type="number" id="start-block" class={'h-[40px] w-60 rounded-lg border border-gray-400 px-2 py-1 text-black'} aria-describedby="Contribution" />
+								<span class="text-sm text-[#131416]/[0.64]">approx start <Countdown endBlock={proposalStart - burnHeightNow} scaleFactor={1} /></span>
 							</div>
 							<div class="w-full">
-								<label class="block" for="duration-block"
-									>voting open for minimum {proposalDuration} blocks</label
-								>
-								<input
-									on:change={() => refreshClocks()}
-									bind:value={proposalDuration}
-									type="number"
-									id="duration-block"
-									class={'h-[40px] w-60 rounded-lg border border-gray-400 px-2 py-1 text-black'}
-									aria-describedby="Contribution"
-								/>
-								<span class="text-sm text-[#131416]/[0.64]"
-									>approx end <Countdown
-										endBlock={proposalStart + proposalDuration - burnHeightNow}
-										scaleFactor={1}
-									/></span
-								>
+								<label class="block" for="duration-block">voting open for minimum {proposalDuration} blocks</label>
+								<input on:change={() => refreshClocks()} bind:value={proposalDuration} type="number" id="duration-block" class={'h-[40px] w-60 rounded-lg border border-gray-400 px-2 py-1 text-black'} aria-describedby="Contribution" />
+								<span class="text-sm text-[#131416]/[0.64]">approx end <Countdown endBlock={proposalStart + proposalDuration - burnHeightNow} scaleFactor={1} /></span>
 							</div>
 							<div>
 								<button

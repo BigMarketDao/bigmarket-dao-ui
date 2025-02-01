@@ -1,8 +1,9 @@
 import { AppConfig, showConnect, UserSession } from '@stacks/connect';
 import { storedStacksWallet } from '$stores/wallet';
-import { getConfig } from '$stores/store_helpers';
+import { getConfig, getSession } from '$stores/store_helpers';
 import { ChainId, STACKS_DEVNET, STACKS_MAINNET, STACKS_TESTNET } from '@stacks/network';
 import { stringAsciiCV, tupleCV, uintCV } from '@stacks/transactions';
+import { getBalanceAtHeight, getTokenBalances } from '@mijoco/stx_helpers/dist/index';
 
 const appConfig = new AppConfig(['store_write', 'publish_data']);
 const userSession = new UserSession({ appConfig });
@@ -145,7 +146,7 @@ export const coordinators = [
 	{ stxAddress: 'ST167Z6WFHMV0FZKFCRNWZ33WTB0DFBCW9M1FW3AY', btcAddress: '' }, // coordinator
 	{ stxAddress: 'SP1R1061ZT6KPJXQ7PAXPFB6ZAZ6ZWW28GBQA1W0F', btcAddress: '' }, // coordinator
 	{ stxAddress: 'SP3JP0N1ZXGASRJ0F7QAHWFPGTVK9T2XNXDB908Z', btcAddress: '' }, // marten
-	{ stxAddress: 'SPSEBFRZZEZSHGRKRR1Z55RX5AWHER3CYM0H9BMW', btcAddress: '' } // mitchell
+	{ stxAddress: 'ST2RPDWF6N939Y32C4ZEVC74SCRTGSJBFBPJP05H5', btcAddress: '' }
 ];
 
 export function isCoordinator(address: string | undefined) {

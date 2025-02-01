@@ -77,7 +77,7 @@
 
 	const getSignature = async () => {
 		examplePoll.createdAt = new Date().getTime();
-		pollMessage = opinionPollToTupleCV(examplePoll.createdAt, examplePoll.name, examplePoll.proposer, examplePoll.token);
+		pollMessage = opinionPollToTupleCV(examplePoll.name, examplePoll.category, examplePoll.createdAt, examplePoll.proposer, examplePoll.token);
 		const dataHash = dataHashSip18(getConfig().VITE_NETWORK, getConfig().VITE_PUBLIC_APP_NAME, getConfig().VITE_PUBLIC_APP_VERSION, pollMessage);
 		await signAdminMessage(async function (auth: Auth) {
 			const poll: StoredOpinionPoll = {

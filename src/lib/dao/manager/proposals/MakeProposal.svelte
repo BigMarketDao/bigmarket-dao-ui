@@ -2,11 +2,7 @@
 	import { sessionStore } from '$stores/stores';
 	import { openContractDeploy } from '@stacks/connect';
 	import { lookupContract, type InFlight } from '@mijoco/stx_helpers/dist/index';
-	import type {
-		DaoStore,
-		FundingData,
-		VotingEventProposeProposal
-	} from '@mijoco/stx_helpers/dist/index';
+	import type { DaoStore, FundingData, VotingEventProposeProposal } from '@mijoco/stx_helpers/dist/index';
 	import { getConfig } from '$stores/store_helpers';
 	import { onMount } from 'svelte';
 	import { configStore } from '$stores/stores_config';
@@ -28,7 +24,8 @@
 	let fundedSubmission = true;
 	let submission: string = '';
 	const fundedSubmissionContractId = `${daoContractAddress}.${$configDaoStore.VITE_DOA_FUNDED_SUBMISSION_EXTENSION}`;
-	const coreSubmissionContractId = `${daoContractAddress}.${'bde003-core-proposals'}`;
+	const coreSubmissionContractId = `${daoContractAddress}.${'bde003-core-proposals-tokenised'}`;
+	let txId: string | undefined;
 
 	let message: string | undefined;
 
@@ -161,7 +158,6 @@
 		} as unknown as VotingEventProposeProposal;
 	};
 
-	let txId: string;
 	const deployContract = async () => {
 		await openContractDeploy({
 			codeBody: replacedSource,
@@ -183,11 +179,8 @@
 	};
 
 	$: newSource = replacedSource;
-	$: newSourceValid =
-		replacedSource.indexOf(daoContractAddress + '.proposal-trait.proposal-trait') > -1 ||
-		getStxAddress() === daoContractAddress;
-	$: explorerUrl =
-		$configStore.VITE_STACKS_EXPLORER + '/txid/' + txId + '?chain=' + $configStore.VITE_NETWORK;
+	$: newSourceValid = replacedSource.indexOf(daoContractAddress + '.proposal-trait.proposal-trait') > -1 || getStxAddress() === daoContractAddress;
+	$: explorerUrl = $configStore.VITE_STACKS_EXPLORER + '/txid/' + txId + '?chain=' + $configStore.VITE_NETWORK;
 
 	onMount(async () => {
 		const tempId = page.url.searchParams.get('tentativeCId');
@@ -201,22 +194,13 @@
 
 <svelte:head>
 	<title>Bitcoin DAO</title>
-	<meta
-		name="description"
-		content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin"
-	/>
+	<meta name="description" content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin" />
 </svelte:head>
 
 <div class="w-full">
 	<div class="flex w-full flex-col gap-y-4">
 		<p>Enter proposal contract id</p>
-		<input
-			bind:value={contractId}
-			on:keyup={() => lookup()}
-			type="text"
-			id="propose-contract"
-			class="w-full rounded-md border p-3 text-black"
-		/>
+		<input bind:value={contractId} on:keyup={() => lookup()} type="text" id="propose-contract" class="w-full rounded-md border p-3 text-black" />
 		{#if message}
 			<div class="my-3">
 				<Banner bannerType={'info'} {message} />
@@ -255,11 +239,7 @@
 		{/if}
 		{#if contract && contractId && fundingData}
 			{#if submission === 'public'}
-				<FundingSubmission
-					{contractId}
-					{fundingData}
-					submissionContractId={fundedSubmissionContractId}
-				/>
+				<FundingSubmission {contractId} {fundingData} submissionContractId={fundedSubmissionContractId} />
 			{:else if submission === 'core'}
 				<CoreSubmission {contractId} submissionContractId={coreSubmissionContractId} />
 			{/if}
@@ -282,10 +262,7 @@
 					{:else}
 						<div class="mt-5 text-center">
 							{#if newSourceValid}
-								<p>
-									Contract ready to be deployed - once its fully deployed crowd fund support for
-									this proposal
-								</p>
+								<p>Contract ready to be deployed - once its fully deployed crowd fund support for this proposal</p>
 								<button
 									class="btn btn-warning rounded"
 									on:click|preventDefault={() => {
@@ -293,10 +270,7 @@
 									}}>Deploy proposal</button
 								>
 							{:else}
-								<p class="bg-danger p-3">
-									Contract is not ready to be deployed - please check the contract implements the
-									trait correctly - using the full address given above.
-								</p>
+								<p class="bg-danger p-3">Contract is not ready to be deployed - please check the contract implements the trait correctly - using the full address given above.</p>
 								<button disabled class="btn text-danger rounded">Proposal Trait Invalid</button>
 							{/if}
 						</div>

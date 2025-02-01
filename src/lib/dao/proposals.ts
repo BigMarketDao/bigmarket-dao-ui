@@ -1,7 +1,4 @@
-import {
-	type TentativeProposal,
-	type VotingEventProposeProposal
-} from '@mijoco/stx_helpers/dist/index';
+import { type TentativeProposal, type VotingEventProposeProposal, type VotingEventVoteOnProposal } from '@mijoco/stx_helpers/dist/index';
 import { getConfig, getDaoConfig, getSession } from '$stores/store_helpers';
 import { isLoggedIn } from '../stacks/stacks-connect';
 
@@ -88,9 +85,23 @@ export async function getConcludedProposals() {
 	return res;
 }
 
-export async function getProposalLatest(
-	proposal: string
-): Promise<VotingEventProposeProposal | undefined> {
+export async function getVotesByVoterAndProposal(voter: string, proposal: string): Promise<Array<VotingEventVoteOnProposal> | []> {
+	const path = `${getConfig().VITE_BIGMARKET_API}/dao/voter/${voter}/${proposal}`;
+	const response = await fetch(path);
+	if (response.status === 404) return [];
+	const res = await response.json();
+	return res;
+}
+
+export async function getVotesByVoter(voter: string): Promise<Array<VotingEventVoteOnProposal> | []> {
+	const path = `${getConfig().VITE_BIGMARKET_API}/dao/voter/${voter}`;
+	const response = await fetch(path);
+	if (response.status === 404) return [];
+	const res = await response.json();
+	return res;
+}
+
+export async function getProposalLatest(proposal: string): Promise<VotingEventProposeProposal | undefined> {
 	const path = `${getConfig().VITE_BIGMARKET_API}/dao/proposals/proposal/${proposal}`;
 	const response = await fetch(path);
 	if (response.status === 404) return;
@@ -98,9 +109,7 @@ export async function getProposalLatest(
 	return res;
 }
 
-export async function getTentativeProposal(
-	proposalId: string
-): Promise<TentativeProposal | undefined> {
+export async function getTentativeProposal(proposalId: string): Promise<TentativeProposal | undefined> {
 	const path = `${getConfig().VITE_BIGMARKET_API}/proposals/v1/get-tentative-proposal/${proposalId}`;
 	const response = await fetch(path);
 	if (response.status === 404) return;

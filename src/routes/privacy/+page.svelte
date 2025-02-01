@@ -1,4 +1,9 @@
-<div class="container">
+<script>
+	import Privacy from '$lib/components/Privacy.svelte';
+</script>
+
+<Privacy />
+<!-- <div class="container">
 	<h1>Privacy Policy</h1>
 	<p><strong>Effective Date:</strong> 16/Dec/2024</p>
 	<p><strong>Last Updated:</strong> 16/Dec/2024</p>
@@ -123,4 +128,4 @@
 		<li>Email: team@brightblock.org</li>
 		<li>Website: brightblock.org</li>
 	</ul>
-</div>
+</div> -->

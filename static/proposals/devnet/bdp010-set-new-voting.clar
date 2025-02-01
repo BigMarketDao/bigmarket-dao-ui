@@ -20,8 +20,8 @@
 		;; Enable genesis extensions.
 		(try! (contract-call? .bitcoin-dao set-extensions
 			(list
-				{extension: .bde001-proposal-voting, enabled: false}
-				{extension: .bde001-proposal-voting, enabled: true}
+				{extension: .bde001-proposal-voting-tokenised, enabled: false}
+				{extension: .bde001-proposal-voting-tokenised, enabled: true}
 			)
 		))
 		(print "Bitcoin DAO has been reconfigured.")

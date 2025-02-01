@@ -1,11 +1,7 @@
-import { cvToHex, PostConditionMode, stringAsciiCV, tupleCV, uintCV } from '@stacks/transactions';
+import { contractPrincipalCV, cvToHex, PostConditionMode, someCV, stringAsciiCV, tupleCV, uintCV } from '@stacks/transactions';
 import { getConfig } from '$stores/store_helpers';
 import { ChainId } from '@stacks/network';
-import {
-	openStructuredDataSignatureRequestPopup,
-	showContractCall,
-	type SignatureData
-} from '@stacks/connect';
+import { openStructuredDataSignatureRequestPopup, showContractCall, type SignatureData } from '@stacks/connect';
 import { domain, domainCV, getStxAddress, getStxNetwork } from '$lib/stacks/stacks-connect';
 import { appDetails } from '$lib/config';
 import { request } from 'sats-connect';
@@ -39,17 +35,21 @@ export async function fetchSip18Votes(proposal: string) {
 	return res;
 }
 
-export async function submitSip18Votes(
-	proposal: VotingEventProposeProposal,
-	votes: Array<StoredVoteMessage>
-) {
-	const args = votesToClarityValue(proposal.proposal, votes);
+export async function submitSip18Votes(proposal: VotingEventProposeProposal, votes: Array<StoredVoteMessage>) {
+	let args;
+	const votingContractName = proposal.votingContract.split('.')[1];
+	if (votingContractName === 'bde001-proposal-voting-tokenised') {
+		args = votesToClarityValue(proposal.proposal, votes); // pass reclaim prop if one
+	} else {
+		args = votesToClarityValue(proposal.proposal, votes);
+	}
+
 	await showContractCall({
 		network: getStacksNetwork(getConfig().VITE_NETWORK),
 		postConditions: [],
 		postConditionMode: PostConditionMode.Deny,
 		contractAddress: proposal.votingContract.split('.')[0],
-		contractName: proposal.votingContract.split('.')[1],
+		contractName: votingContractName,
 		functionName: 'batch-vote',
 		functionArgs: [args.votesCV],
 		onFinish: (data) => {
@@ -62,10 +62,7 @@ export async function submitSip18Votes(
 	});
 }
 
-export async function postVoteMessage(
-	hash: string,
-	auth: { message: VoteMessage; signature: SignatureData }
-) {
+export async function postVoteMessage(hash: string, auth: { message: VoteMessage; signature: SignatureData }) {
 	const path = `${getConfig().VITE_BIGMARKET_API}/dao/sip18-voting/votes/${hash}`;
 	const response = await fetch(path, {
 		method: 'POST',
@@ -116,14 +113,7 @@ export async function signAdminMessage(callback: any) {
 			console.log('/votes: signature: ' + signature.signature);
 			console.log('/votes: publicKey: ' + signature.publicKey);
 			console.log('/votes: message: ', adminMessage);
-			let res = verifyBaseAdminSignature(
-				network,
-				appName,
-				appVersion,
-				adminMessage,
-				signature.signature,
-				signature.publicKey
-			);
+			let res = verifyBaseAdminSignature(network, appName, appVersion, adminMessage, signature.signature, signature.publicKey);
 			callback({ message: adminMessage, signature });
 		}
 	});
@@ -140,9 +130,7 @@ export async function signAdminMessageXverse() {
 			tupleCV({
 				name: stringAsciiCV('sats-connect-example'),
 				version: stringAsciiCV('1.2.3'),
-				'chain-id': uintCV(
-					getConfig().VITE_NETWORK === 'mainnet' ? ChainId.Mainnet : ChainId.Testnet
-				)
+				'chain-id': uintCV(getConfig().VITE_NETWORK === 'mainnet' ? ChainId.Mainnet : ChainId.Testnet)
 			})
 		).slice(2)
 	});
@@ -156,12 +144,7 @@ export async function signAdminMessageXverse() {
 	return response;
 }
 
-export async function newVoteMessage(
-	proposal: VotingEventProposeProposal,
-	vote: boolean,
-	amount: number,
-	voter: string
-): Promise<VoteMessage> {
+export async function newVoteMessage(proposal: VotingEventProposeProposal, vote: boolean, amount: number, voter: string): Promise<VoteMessage> {
 	const ts = await fetchTimestamp();
 	return {
 		attestation: vote ? 'I vote in favour of the proposal' : 'I vote against the proposal',
