@@ -27,7 +27,7 @@
 	const castVote = async (vfor: boolean) => {
 		const deployer = proposal.daoContract.split('.')[0];
 		if (!isLoggedIn()) {
-			errorMessage = 'Please connect your wallet to vote';
+			errorMessage = 'Please connect your wallet';
 			return;
 		}
 		// if (amountStx === 0 || amountStx < 1) {

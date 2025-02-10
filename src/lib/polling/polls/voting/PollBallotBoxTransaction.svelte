@@ -1,14 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import {
-		PostConditionMode,
-		boolCV,
-		bufferCV,
-		falseCV,
-		listCV,
-		noneCV,
-		trueCV
-	} from '@stacks/transactions';
+	import { PostConditionMode, boolCV, bufferCV, falseCV, listCV, noneCV, trueCV } from '@stacks/transactions';
 	import { showContractCall } from '@stacks/connect';
 	import { sessionStore } from '$stores/stores';
 	import type { PollCreateEvent } from '@mijoco/stx_helpers/dist/index';
@@ -29,7 +21,7 @@
 	const castVote = async (vfor: boolean) => {
 		const deployer = poll.daoContract.split('.')[0];
 		if (!isLoggedIn()) {
-			errorMessage = 'Please connect your wallet to vote';
+			errorMessage = 'Please connect your wallet';
 			return;
 		}
 		let forCV = trueCV();
@@ -74,11 +66,7 @@
 			if (txIdObj) {
 				const potentialTxId = JSON.parse(txIdObj).txId;
 				const tx = await lookupTransaction(potentialTxId);
-				if (
-					tx &&
-					tx.tx_status === 'pending' &&
-					tx.sender_address === $sessionStore.keySets[getConfig().VITE_NETWORK].stxAddress
-				) {
+				if (tx && tx.tx_status === 'pending' && tx.sender_address === $sessionStore.keySets[getConfig().VITE_NETWORK].stxAddress) {
 					txId = potentialTxId;
 				} else {
 					if (tx.sender_address === $sessionStore.keySets[getConfig().VITE_NETWORK].stxAddress) {
@@ -94,12 +82,7 @@
 	<div class="flex flex-col gap-y-4">
 		{#if txId}
 			<div class="mb-3 max-w-xl">
-				<Banner
-					bannerType={'warning'}
-					message={'Your vote is in the mempool and should be confirmed soon. See <a href="' +
-						explorerUrl +
-						'" target="_blank">explorer!</a>'}
-				/>
+				<Banner bannerType={'warning'} message={'Your vote is in the mempool and should be confirmed soon. See <a href="' + explorerUrl + '" target="_blank">explorer!</a>'} />
 			</div>
 		{:else}
 			<div class="flex w-full justify-start gap-x-4">

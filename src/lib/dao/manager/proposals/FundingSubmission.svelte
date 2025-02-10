@@ -68,7 +68,7 @@
 
 	const submitFlexible = async () => {
 		if (!isLoggedIn()) {
-			errorMessage = 'Please connect your wallet to vote';
+			errorMessage = 'Please connect your wallet';
 			return;
 		}
 		if (proposalStartDelay < 2) {
@@ -122,22 +122,12 @@
 		fundingMet = false;
 		proposalDuration = fundingData.parameters.proposalDuration;
 		proposalStartDelay = fundingData.parameters.proposalStartDelay;
-		startHeightMessage =
-			'The earliest start for voting is in ' +
-			proposalStartDelay +
-			' bitcoin blocks at ' +
-			fmtNumber(burnHeightNow + proposalStartDelay);
-		durationMessage =
-			'The voting window is ' +
-			proposalDuration +
-			' blocks, roughly ' +
-			(proposalDuration / 144).toFixed(2) +
-			' days, after voting starts.';
+		startHeightMessage = 'The earliest start for voting is in ' + proposalStartDelay + ' bitcoin blocks at ' + fmtNumber(burnHeightNow + proposalStartDelay);
+		durationMessage = 'The voting window is ' + proposalDuration + ' blocks, roughly ' + (proposalDuration / 144).toFixed(2) + ' days, after voting starts.';
 		inited = true;
 	});
 
-	$: explorerUrl =
-		getConfig().VITE_STACKS_EXPLORER + '/txid/' + txId + '?chain=' + getConfig().VITE_NETWORK;
+	$: explorerUrl = getConfig().VITE_STACKS_EXPLORER + '/txid/' + txId + '?chain=' + getConfig().VITE_NETWORK;
 </script>
 
 {#if inited}
@@ -149,9 +139,7 @@
 						<p>{startHeightMessage}</p>
 						<p>{durationMessage}</p>
 						<p class="text-1xl">
-							Fund proposal : {fmtMicroToStx(
-								fundingData.parameters.fundingCost - fundingData.funding
-							)} STX needed!
+							Fund proposal : {fmtMicroToStx(fundingData.parameters.fundingCost - fundingData.funding)} STX needed!
 						</p>
 					</div>
 					<div class="my-3">
@@ -167,34 +155,13 @@
 					<div class="flex w-full flex-col gap-y-4">
 						<div class="w-full">
 							<label class="block" for="start-block">voting will begin after</label>
-							<input
-								bind:value={proposalStartDelay}
-								type="number"
-								id="start-block"
-								class={'h-[40px] w-60 rounded-lg border border-gray-400 px-2 py-1 text-black'}
-								aria-describedby="Contribution"
-							/>
-							<span class="text-sm text-[#131416]/[0.64]"
-								><Countdown endBlock={proposalStartDelay} scaleFactor={1} /></span
-							>
+							<input bind:value={proposalStartDelay} type="number" id="start-block" class={'h-[40px] w-60 rounded-lg border border-gray-400 px-2 py-1 text-black'} aria-describedby="Contribution" />
+							<span class="text-sm text-[#131416]/[0.64]"><Countdown endBlock={proposalStartDelay} scaleFactor={1} /></span>
 						</div>
 						<div class="w-full">
-							<label class="block" for="duration-block"
-								>voting open for minimum {proposalDuration} blocks</label
-							>
-							<input
-								bind:value={proposalDuration}
-								type="number"
-								id="duration-block"
-								class={'h-[40px] w-60 rounded-lg border border-gray-400 px-2 py-1 text-black'}
-								aria-describedby="Contribution"
-							/>
-							<span class="text-sm text-[#131416]/[0.64]"
-								><Countdown
-									endBlock={proposalStartDelay + proposalDuration}
-									scaleFactor={1}
-								/></span
-							>
+							<label class="block" for="duration-block">voting open for minimum {proposalDuration} blocks</label>
+							<input bind:value={proposalDuration} type="number" id="duration-block" class={'h-[40px] w-60 rounded-lg border border-gray-400 px-2 py-1 text-black'} aria-describedby="Contribution" />
+							<span class="text-sm text-[#131416]/[0.64]"><Countdown endBlock={proposalStartDelay + proposalDuration} scaleFactor={1} /></span>
 						</div>
 						<div>
 							<button

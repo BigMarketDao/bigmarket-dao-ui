@@ -32,7 +32,7 @@
 
 	const submitFlexible = async () => {
 		if (!isLoggedIn()) {
-			errorMessage = 'Please connect your wallet to vote';
+			errorMessage = 'Please connect your wallet';
 			return;
 		}
 		if (proposalDuration < 3) {
