@@ -6,7 +6,7 @@
 ;; mints the initial governance tokens. Boot proposal that sets the governance token, DAO parameters, and extensions, and
 ;; mints the initial governance tokens.
 ;; Description:
-;; Bootstraps bitcoin-dao for stacks ecosystem voting. Boot proposal that sets the governance token, DAO parameters, and extensions, and
+;; Bootstraps bigmarket-dao for stacks ecosystem voting. Boot proposal that sets the governance token, DAO parameters, and extensions, and
 ;; mints the initial governance tokens. Boot proposal that sets the governance token, DAO parameters, and extensions, and
 ;; mints the initial governance tokens. Boot proposal that sets the governance token, DAO parameters, and extensions, and
 ;; mints the initial governance tokens. Boot proposal that sets the governance token, DAO parameters, and extensions, and
@@ -18,13 +18,13 @@
 (define-public (execute (sender principal))
 	(begin
 		;; Enable genesis extensions.
-		(try! (contract-call? .bitcoin-dao set-extensions
+		(try! (contract-call? .bigmarket-dao set-extensions
 			(list
-				{extension: .bde001-proposal-voting-tokenised, enabled: false}
-				{extension: .bde001-proposal-voting-tokenised, enabled: true}
+				{extension: .bme001-0-proposal-voting, enabled: false}
+				{extension: .bme001-0-proposal-voting, enabled: true}
 			)
 		))
-		(print "Bitcoin DAO has been reconfigured.")
+		(print "BigMarket DAO has been reconfigured.")
 		(ok true)
 	)
 )

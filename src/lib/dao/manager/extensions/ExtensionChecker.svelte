@@ -15,22 +15,13 @@
 </script>
 
 <svelte:head>
-	<title>Bitcoin DAO</title>
-	<meta
-		name="description"
-		content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin"
-	/>
+	<title>BigMarket DAO</title>
+	<meta name="description" content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin" />
 </svelte:head>
 
 <div class="flex flex-col gap-y-1">
 	<div class="flex w-full justify-start">
-		<input
-			class="w-full rounded-lg border-gray-800 p-2 text-black"
-			bind:value={extension}
-			type="text"
-			id="Contribution"
-			aria-describedby="Contribution"
-		/>
+		<input class="w-full rounded-lg border-gray-800 p-2 text-black" bind:value={extension} type="text" id="Contribution" aria-describedby="Contribution" />
 	</div>
 	<div>
 		<button

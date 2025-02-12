@@ -17,7 +17,7 @@
 </script>
 
 <svelte:head>
-	<title>Bitcoin DAO</title>
+	<title>BigMarket DAO</title>
 	<meta name="description" content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin" />
 </svelte:head>
 

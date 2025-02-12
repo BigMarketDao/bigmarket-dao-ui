@@ -1,25 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { sessionStore } from '$stores/stores';
-	import {
-		type ResultsSummary,
-		type VotingEventProposeProposal
-	} from '@mijoco/stx_helpers/dist/index';
+	import { type ResultsSummary, type VotingEventProposeProposal } from '@mijoco/stx_helpers/dist/index';
 	import { fmtNumber } from '$lib/utils';
-	import {
-		getCurrentProposalLink,
-		getProposalLatest,
-		getProposalNotFoundLink,
-		isConclusionPending,
-		isPostVoting,
-		isVoting
-	} from '$lib/dao/proposals';
-	import {
-		findDaoVotes,
-		NAKAMOTO_VOTE_STOPS_HEIGHT,
-		summarizeVotes,
-		type VoteSummary
-	} from '$lib/dao/dao_api';
+	import { getCurrentProposalLink, getProposalLatest, getProposalNotFoundLink, isConclusionPending, isPostVoting, isVoting } from '$lib/dao/proposals';
+	import { findDaoVotes, NAKAMOTO_VOTE_STOPS_HEIGHT, summarizeVotes, type VoteSummary } from '$lib/dao/dao_api';
 	import ProposalHeader from '$lib/dao/proposals/ProposalHeader.svelte';
 	import VoteResultsOverview from '$lib/dao/proposals/dao-voting/VoteResultsOverview.svelte';
 	import DaoResults from '$lib/dao/proposals/dao-voting/DaoResults.svelte';
@@ -40,9 +25,7 @@
 	};
 
 	const blockSinceEnd = () => {
-		return (
-			$sessionStore.stacksInfo?.burn_block_height - (proposal?.proposalData?.burnEndHeight || 0)
-		);
+		return $sessionStore.stacksInfo?.burn_block_height - (proposal?.proposalData?.burnEndHeight || 0);
 	};
 
 	const voteConcluded = () => {
@@ -62,11 +45,8 @@
 </script>
 
 <svelte:head>
-	<title>Bitcoin DAO - SIP Voting</title>
-	<meta
-		name="description"
-		content="Stacks Improvement Proposals - governance of the Stacks Blockchain."
-	/>
+	<title>BigMarket DAO - SIP Voting</title>
+	<meta name="description" content="Stacks Improvement Proposals - governance of the Stacks Blockchain." />
 </svelte:head>
 
 <div class="mx-auto max-w-7xl py-6 md:px-6">
@@ -75,18 +55,14 @@
 		{#if isConclusionPending(proposal)}
 			<div class="flex justify-around">
 				<div class="my-3 text-sm">
-					<a href="/" class="text-bloodorange" on:click|preventDefault={() => conclude()}
-						>Voting closed - please conclude</a
-					>
+					<a href="/" class="text-bloodorange" on:click|preventDefault={() => conclude()}>Voting closed - please conclude</a>
 				</div>
 			</div>
 		{/if}
 
 		{#if voteConcluded() || isVoting(proposal)}
 			<div class="my-8 flex w-full flex-col">
-				<div
-					class="relative overflow-hidden rounded-2xl py-10 md:grid md:auto-cols-auto md:grid-flow-col md:gap-12"
-				>
+				<div class="relative overflow-hidden rounded-2xl py-10 md:grid md:auto-cols-auto md:grid-flow-col md:gap-12">
 					<div class="flex flex-col items-stretch justify-items-stretch">
 						<div>
 							{#if blockSinceEnd() > 0}
@@ -94,8 +70,7 @@
 									<h2 class="mb-3 text-2xl">Voting is closed</h2>
 									<p>Voting closed at block {fmtNumber(proposal.proposalData.burnEndHeight)}</p>
 									<p>
-										{summary.accountsAgainst + summary.accountsFor} addresses voted. Detailed results
-										are displayed below.
+										{summary.accountsAgainst + summary.accountsFor} addresses voted. Detailed results are displayed below.
 									</p>
 								</div>
 							{:else}
@@ -103,8 +78,7 @@
 									<h2 class="mb-3 text-2xl">Voting in progress</h2>
 									<p>Voting closes at block {fmtNumber(proposal.proposalData.burnEndHeight)}</p>
 									<p>
-										{summary.accountsAgainst + summary.accountsFor} addresses voted. Detailed results
-										are displayed below.
+										{summary.accountsAgainst + summary.accountsFor} addresses voted. Detailed results are displayed below.
 									</p>
 								</div>
 							{/if}

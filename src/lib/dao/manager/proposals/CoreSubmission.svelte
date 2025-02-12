@@ -46,7 +46,7 @@
 		const proposalStartCV = uintCV(proposalStart);
 		const paramDurationCV = uintCV(proposalDuration);
 		const customMajorityCV = someCV(uintCV(8000));
-		const votingContractCV = contractPrincipalCV(contractId.split('.')[0], 'bde001-proposal-voting-tokenised');
+		const votingContractCV = contractPrincipalCV(contractId.split('.')[0], 'bme001-0-proposal-voting');
 		const proposalCV = contractPrincipalCV(contractId.split('.')[0], contractId.split('.')[1]);
 		let functionArgs = [proposalCV, proposalStartCV, paramDurationCV, customMajorityCV];
 		console.log('submissionContractId: ' + submissionContractId);

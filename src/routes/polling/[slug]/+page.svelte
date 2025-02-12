@@ -11,11 +11,8 @@
 </script>
 
 <svelte:head>
-	<title>Bitcoin DAO</title>
-	<meta
-		name="description"
-		content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin"
-	/>
+	<title>BigMarket DAO</title>
+	<meta name="description" content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin" />
 </svelte:head>
 
 <div class="mx-auto max-w-4xl py-4 md:px-6">
@@ -24,13 +21,7 @@
 
 		<div class="flex flex-col sm:flex-row">
 			<div class="order-1 w-3/4 py-4 md:order-1">
-				<PolymarketCard
-					target={'/polling/new/' + pollContract}
-					label={'Start here!'}
-					description={undefined}
-					title={'New Poll'}
-					selected={0}
-				>
+				<PolymarketCard target={'/polling/new/' + pollContract} label={'Start here!'} description={undefined} title={'New Poll'} selected={0}>
 					<div slot="longDescription">
 						<p>Launching a poll is cheap and easy. For 50 STX you get;</p>
 						<ul class="m-3 text-sm">

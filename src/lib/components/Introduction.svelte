@@ -17,7 +17,7 @@
 		<!-- <h2 class="w-full text-2xl font-semibold mb-4 text-primary-500">What to prove?</h2> -->
 		<!-- <div class="my-5">
 			<PolymarketCard
-				target={'/polling/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bde021-market-voting'}
+				target={'/polling/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bme021-0-market-voting'}
 				label={'New Poll'}
 				description={'Get your communities input!'}
 				title={'Opinion Polling'}
@@ -29,7 +29,7 @@
 			</PolymarketCard>
 		</div> -->
 		<div class="my-5">
-			<PolymarketCard target={`/dao/manager/propose/${getDaoConfig().VITE_DOA_DEPLOYER}.bitcoin-dao`} label={'Propose Something'} description={'Something to propose to improve the DAO?'} title={'Make a Proposal'} selected={0}>
+			<PolymarketCard target={`/dao/manager/propose/${getDaoConfig().VITE_DOA_DEPLOYER}.bigmarket-dao`} label={'Propose Something'} description={'Something to propose to improve the DAO?'} title={'Make a Proposal'} selected={0}>
 				<div slot="longDescription">
 					<div>
 						<ProposalListPublic />

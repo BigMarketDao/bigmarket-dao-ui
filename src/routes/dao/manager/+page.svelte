@@ -21,11 +21,8 @@
 </script>
 
 <svelte:head>
-	<title>Bitcoin DAO</title>
-	<meta
-		name="description"
-		content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin"
-	/>
+	<title>BigMarket DAO</title>
+	<meta name="description" content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin" />
 </svelte:head>
 
 <div class="w-full py-4">
@@ -43,10 +40,7 @@
 			</div>
 
 			<div class="mt-8 flex w-full justify-center">
-				<button
-					on:click={() => gotoLink()}
-					class="rounded bg-primary-500 px-6 py-2 font-semibold text-black transition duration-200 hover:bg-primary-600"
-				>
+				<button on:click={() => gotoLink()} class="rounded bg-primary-500 px-6 py-2 font-semibold text-black transition duration-200 hover:bg-primary-600">
 					<ArrowRightAltOutline class="inline" />
 					Manage DAO
 				</button>

@@ -50,7 +50,7 @@
 		const proposalCV = contractPrincipalCV(proposal.proposal.split('.')[0], proposal.proposal.split('.')[1]);
 		const reclaimProposalCV = someCV(contractPrincipalCV(proposal.proposal.split('.')[0], proposal.proposal.split('.')[1]));
 		let functionArgs;
-		if (votingContractName === 'bde001-proposal-voting-tokenised') {
+		if (votingContractName === 'bme001-0-proposal-voting') {
 			functionArgs = [amountCV, forCV, proposalCV, noneCV()];
 		} else {
 			functionArgs = [amountCV, forCV, proposalCV];
@@ -58,7 +58,7 @@
 
 		const postConditions = [];
 		const formattedToken = (getDaoConfig().VITE_DOA_DEPLOYER + '.' + getDaoConfig().VITE_DAO_GOVERNANCE_TOKEN) as `${string}.${string}`;
-		const postConditionFt = Pc.principal(getStxAddress()).willSendEq(amountUSTX).ft(formattedToken, 'bdg-token');
+		const postConditionFt = Pc.principal(getStxAddress()).willSendEq(amountUSTX).ft(formattedToken, 'bmg-token');
 		postConditions.push(postConditionFt);
 
 		await showContractCall({

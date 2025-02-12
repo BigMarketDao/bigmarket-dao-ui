@@ -1,9 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import {
-		type StoredVoteMessage,
-		type VotingEventProposeProposal
-	} from '@mijoco/stx_helpers/dist/index';
+	import { type StoredVoteMessage, type VotingEventProposeProposal } from '@mijoco/stx_helpers/dist/index';
 	import { getCurrentProposalLink, getProposalLatest } from '$lib/dao/proposals';
 	import { getStxAddress } from '$lib/stacks/stacks-connect';
 	import ChainUtils from '$lib/dao/ChainUtils';
@@ -39,11 +36,8 @@
 </script>
 
 <svelte:head>
-	<title>Bitcoin DAO - SIP Voting</title>
-	<meta
-		name="description"
-		content="Stacks Improvement Proposals - governance of the Stacks Blockchain."
-	/>
+	<title>BigMarket DAO - SIP Voting</title>
+	<meta name="description" content="Stacks Improvement Proposals - governance of the Stacks Blockchain." />
 </svelte:head>
 
 <div class="mx-auto max-w-7xl py-6 md:px-6">
@@ -55,12 +49,7 @@
 
 			{#each sip18Votes as item}
 				<div class="grid w-full grid-cols-5 justify-evenly text-[11px]">
-					<div
-						class={item.voter === getStxAddress()
-							? 'text-success col-span-2 w-full break-words'
-							: 'col-span-2 break-words'}
-						title={item.voter === getStxAddress() ? 'I voted!' : ''}
-					>
+					<div class={item.voter === getStxAddress() ? 'text-success col-span-2 w-full break-words' : 'col-span-2 break-words'} title={item.voter === getStxAddress() ? 'I voted!' : ''}>
 						<span class="break-words">{item.voter}</span>
 					</div>
 					<div class="">{@html ChainUtils.fromOnChainAmount(item.voting_power)}</div>
@@ -68,9 +57,7 @@
 						{@html item.vote}
 					</div>
 					<div class="text-end">
-						{@html item.processed
-							? '<span class="bg-success-300 text-success-800 py-2 px-3  border-success-500 rounded-2xl">Yes</span>'
-							: '<span class="bg-danger-300 text-danger-100 py-2 px-3  border-danger-500 rounded-2xl">No</span>'}
+						{@html item.processed ? '<span class="bg-success-300 text-success-800 py-2 px-3  border-success-500 rounded-2xl">Yes</span>' : '<span class="bg-danger-300 text-danger-100 py-2 px-3  border-danger-500 rounded-2xl">No</span>'}
 					</div>
 				</div>
 			{/each}

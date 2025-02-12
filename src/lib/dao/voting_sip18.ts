@@ -38,7 +38,7 @@ export async function fetchSip18Votes(proposal: string) {
 export async function submitSip18Votes(proposal: VotingEventProposeProposal, votes: Array<StoredVoteMessage>) {
 	let args;
 	const votingContractName = proposal.votingContract.split('.')[1];
-	if (votingContractName === 'bde001-proposal-voting-tokenised') {
+	if (votingContractName === 'bme001-0-proposal-voting') {
 		args = votesToClarityValue(proposal.proposal, votes); // pass reclaim prop if one
 	} else {
 		args = votesToClarityValue(proposal.proposal, votes);

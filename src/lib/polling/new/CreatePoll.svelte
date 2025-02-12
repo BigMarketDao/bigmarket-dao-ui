@@ -145,7 +145,7 @@
 				<p>
 					A charge of <span class="text-bitcoinorange">{fmtMicroToStx(pollSetupFee)} STX</span> is required to set up an opinion polls.
 				</p>
-				<p>Fees are disbursed to the Bitcoin DAO treasury and used to support ongoing development efforts on Stacks / Bitcoin layer 2 DAO community.</p>
+				<p>Fees are disbursed to the BigMarket DAO treasury and used to support ongoing development efforts on Stacks / Bitcoin layer 2 DAO community.</p>
 				<ul class="ms-5">
 					<li class="list-disc">Free for end users</li>
 					<li class="list-disc">Free social integrations</li>

@@ -18,7 +18,7 @@
 			postConditions: [],
 			postConditionMode: PostConditionMode.Deny,
 			contractAddress: deployer,
-			contractName: 'bde004-core-execute',
+			contractName: 'bme004-0-core-execute',
 			functionName: 'executive-action',
 			functionArgs: [proposalCV],
 			onFinish: (data) => {
@@ -49,14 +49,7 @@
 
 			<div class="my-4 flex w-full flex-col justify-start">
 				<label for="token-name">Proposal contract</label>
-				<input
-					id="token-name"
-					class="rounded-lg border-gray-800 p-2 text-black"
-					bind:value={contractId}
-					on:change={() => checkDeployed(contractId)}
-					type="text"
-					aria-describedby="tokenName"
-				/>
+				<input id="token-name" class="rounded-lg border-gray-800 p-2 text-black" bind:value={contractId} on:change={() => checkDeployed(contractId)} type="text" aria-describedby="tokenName" />
 			</div>
 
 			{#if !txId && deployed}

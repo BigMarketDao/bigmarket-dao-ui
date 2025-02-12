@@ -9,16 +9,14 @@
 	export let proposalMeta: ProposalMeta;
 </script>
 
-<div
-	class="relative mt-4 overflow-hidden rounded-2xl bg-[#0A0A0B] px-8 py-8 text-white sm:px-10 sm:py-10 md:grid md:auto-cols-auto md:grid-flow-col md:gap-12 md:px-12"
->
+<div class="relative mt-4 overflow-hidden rounded-2xl bg-[#0A0A0B] px-8 py-8 text-white sm:px-10 sm:py-10 md:grid md:auto-cols-auto md:grid-flow-col md:gap-12 md:px-12">
 	<div>
 		<dl class="divide-y divide-white/10">
 			{#if daoVotingSupported}
 				<div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
 					<dt class="text-md leading-6 text-white">DAO</dt>
 					<dd class="text-md mt-1 leading-6 text-sand-300 sm:col-span-2 sm:mt-0">
-						{proposalMeta.dao || 'Bitcoin DAO'}
+						{proposalMeta.dao || 'BigMarket DAO'}
 					</dd>
 				</div>
 			{/if}
@@ -51,9 +49,7 @@
 					<div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
 						<dt class="text-md leading-6 text-white">Voting contract</dt>
 						<dd class="text-md mt-1 leading-6 text-sand-300 sm:col-span-2 sm:mt-0">
-							<a href={explorerAddressUrl(votingContract)} target="_blank"
-								>{votingContract.split('.')[1]}</a
-							>
+							<a href={explorerAddressUrl(votingContract)} target="_blank">{votingContract.split('.')[1]}</a>
 						</dd>
 					</div>
 				{/if}
@@ -61,9 +57,7 @@
 					<div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
 						<dt class="text-md leading-6 text-white">Funding contract</dt>
 						<dd class="text-md mt-1 leading-6 text-sand-300 sm:col-span-2 sm:mt-0">
-							<a href={explorerAddressUrl(submissionContract)} target="_blank"
-								>{submissionContract.split('.')[1]}</a
-							>
+							<a href={explorerAddressUrl(submissionContract)} target="_blank">{submissionContract.split('.')[1]}</a>
 						</dd>
 					</div>
 				{/if}

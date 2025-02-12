@@ -10,11 +10,8 @@
 </script>
 
 <svelte:head>
-	<title>Bitcoin DAO</title>
-	<meta
-		name="description"
-		content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin"
-	/>
+	<title>BigMarket DAO</title>
+	<meta name="description" content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin" />
 </svelte:head>
 
 <div class="mx-auto w-full max-w-7xl py-4 md:px-6">

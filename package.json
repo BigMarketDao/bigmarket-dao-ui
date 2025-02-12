@@ -40,7 +40,7 @@
 		"vitest": "^2.0.4"
 	},
 	"dependencies": {
-		"@mijoco/stx_helpers": "^0.6.61",
+		"@mijoco/stx_helpers": "^0.6.62",
 		"@mysten/dapp-kit": "^0.14.43",
 		"@mysten/sui": "^1.17.0",
 		"@mysten/wallet-standard": "^0.13.19",

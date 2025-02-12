@@ -41,7 +41,7 @@
 </script>
 
 <svelte:head>
-	<title>Bitcoin DAO - SIP Voting</title>
+	<title>BigMarket DAO - SIP Voting</title>
 	<meta name="description" content="Stacks Improvement Proposals - governance of the Stacks Blockchain." />
 </svelte:head>
 

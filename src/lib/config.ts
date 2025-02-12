@@ -1,5 +1,5 @@
 export const appDetails = {
-	name: 'bitcoin-dao',
+	name: 'bigmarket-dao',
 	icon: '/img/stx_eco_logo_icon_white.png'
 };
 

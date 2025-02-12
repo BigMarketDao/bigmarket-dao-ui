@@ -24,7 +24,7 @@
 	let fundedSubmission = true;
 	let submission: string = '';
 	const fundedSubmissionContractId = `${daoContractAddress}.${$configDaoStore.VITE_DOA_FUNDED_SUBMISSION_EXTENSION}`;
-	const coreSubmissionContractId = `${daoContractAddress}.${'bde003-core-proposals-tokenised'}`;
+	const coreSubmissionContractId = `${daoContractAddress}.${'bme003-0-core-proposals'}`;
 	let txId: string | undefined;
 
 	let message: string | undefined;
@@ -77,7 +77,7 @@
 	}
 	let showNoop = false;
 	const contractSource = `
-    ;; DAO: Bitcoin DAO
+    ;; DAO: BigMarket DAO
     ;; Title: <title>
     ;; Author: <author>
     ;; Synopsis: <synopsis>
@@ -193,7 +193,7 @@
 </script>
 
 <svelte:head>
-	<title>Bitcoin DAO</title>
+	<title>BigMarket DAO</title>
 	<meta name="description" content="Governance of the Stacks Blockchain, Smart Contracts on Bitcoin" />
 </svelte:head>
 
