@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fmtNumber } from '$lib/utils';
 	import { sessionStore } from '$stores/stores';
-	import type { VotingEventProposeProposal } from '@mijoco/stx_helpers';
+	import type { VotingEventProposeProposal } from '@mijoco/stx_helpers/dist/index';
 	import { onMount } from 'svelte';
 	import { isConclusionPending, isProposedPreVoting, isVoting } from '../proposals';
 	import Countdown from '$lib/components/common/Countdown.svelte';
@@ -9,18 +9,12 @@
 	export let proposal: VotingEventProposeProposal;
 
 	$: endBitcoinBlock = () => {
-		const currentHeight =
-			proposal.submissionContract.indexOf('008') > -1
-				? $sessionStore.stacksInfo.stacks_tip_height
-				: $sessionStore.stacksInfo?.burn_block_height || 0;
+		const currentHeight = proposal.submissionContract.indexOf('008') > -1 ? $sessionStore.stacksInfo.stacks_tip_height : $sessionStore.stacksInfo?.burn_block_height || 0;
 		return proposal.proposalData.burnEndHeight - currentHeight;
 	};
 
 	$: startsInBitcoinBlock = () => {
-		const currentHeight =
-			proposal.submissionContract.indexOf('008') > -1
-				? $sessionStore.stacksInfo.stacks_tip_height
-				: $sessionStore.stacksInfo?.burn_block_height || 0;
+		const currentHeight = proposal.submissionContract.indexOf('008') > -1 ? $sessionStore.stacksInfo.stacks_tip_height : $sessionStore.stacksInfo?.burn_block_height || 0;
 		return proposal.proposalData.burnStartHeight - currentHeight;
 	};
 

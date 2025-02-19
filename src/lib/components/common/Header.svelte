@@ -85,12 +85,12 @@
 					>
 					{heights.bitcoinHeight}
 				</span>
-				<a href="/" on:click|preventDefault={() => toggleNetwork()} class="mx-2 hover:text-blue-400">{$configStore.VITE_NETWORK}</a>
-				<a href="/" on:click|preventDefault={() => goto(`/dao/voter/${getStxAddress()}`)} class="mx-2 hover:text-blue-400">history</a>
+				<a href="/" on:click|preventDefault={() => toggleNetwork()} class="mx-1 hover:text-blue-400">{$configStore.VITE_NETWORK}</a>
+				<a href="/" on:click|preventDefault={() => goto(`/dao/voter/${getStxAddress()}`)} class="mx-1 hover:text-blue-400">history</a>
 				{#if isLoggedIn()}
-					<a href="/" on:click|preventDefault={() => logoutStacks()} class="mx-2 hover:text-blue-400">{truncate(getStxAddress())}</a>
+					<a href="/" on:click|preventDefault={() => logoutStacks()} class="mx-1 hover:text-blue-400">{truncate(getStxAddress())}</a>
 				{:else}
-					<a id="connect-wallet" href="/" on:click|preventDefault={() => loginStacks()} class="mx-2 hover:text-blue-400">Connect Wallet</a>
+					<a id="connect-wallet" href="/" on:click|preventDefault={() => loginStacks()} class="mx-1 hover:text-blue-400">Connect Wallet</a>
 				{/if}
 			</nav>
 		{/key}

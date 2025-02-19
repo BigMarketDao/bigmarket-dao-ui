@@ -28,7 +28,7 @@
 
 	const useRegtest = () => {
 		template.tokenName = 'BigMarket DAO Governance Token';
-		template.tokenSymbol = 'BMG';
+		template.tokenSymbol = 'BIG';
 		template.tokenUrl = 'http://localhost:8080/token/bdg';
 		template.addresses.push('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM');
 		template.addresses.push('ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5');

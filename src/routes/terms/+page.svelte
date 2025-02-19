@@ -8,7 +8,7 @@
 	<p><strong>Effective Date:</strong> 16/Dec/2024</p>
 	<p><strong>Last Updated:</strong> 16/Dec/2024</p>
 	<p>
-		BrightBlock values your privacy. This Privacy Policy explains how we collect, use, and safeguard
+		BigMarket values your privacy. This Privacy Policy explains how we collect, use, and safeguard
 		information when you use our Web3 application, including interactions with blockchain networks
 		like Sui. By accessing or using BigMarket, you agree to this Privacy Policy.
 	</p>

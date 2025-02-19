@@ -1,5 +1,5 @@
 import { getConfig } from '$stores/store_helpers';
-import type { VotingEventVoteOnProposal } from '@mijoco/stx_helpers';
+import type { VotingEventVoteOnProposal } from '@mijoco/stx_helpers/dist/index';
 
 export async function getDaoVotesByProposal(proposal: string) {
 	const url = `${getConfig().VITE_BIGMARKET_API}/dao/proposals/votes/${proposal}`;
