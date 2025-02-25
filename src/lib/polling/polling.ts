@@ -1,28 +1,10 @@
-import {
-	openStructuredDataSignatureRequestPopup,
-	showContractCall,
-	type SignatureData
-} from '@stacks/connect';
+import { openStructuredDataSignatureRequestPopup, showContractCall, type SignatureData } from '@stacks/connect';
 import { appDetails } from '$lib/config';
-import {
-	PostConditionMode,
-	type ClarityValue,
-	type TupleCV,
-	type TupleData
-} from '@stacks/transactions';
+import { PostConditionMode, type ClarityValue, type TupleCV, type TupleData } from '@stacks/transactions';
 import { hashSha256Sync } from '@stacks/encryption';
 import { MerkleTree } from 'merkletreejs';
 import { domain, domainCV, getStxAddress, getStxNetwork } from '../stacks/stacks-connect';
-import {
-	type Auth,
-	type PollCreateEvent,
-	type OpinionPoll,
-	type PollVoteMessage,
-	pollVoteMessageToTupleCV,
-	type StoredPollVoteMessage,
-	getStacksNetwork,
-	pollVotesToClarityValue
-} from '@mijoco/stx_helpers/dist/index';
+import { type Auth, type PollCreateEvent, type OpinionPoll, type PollVoteMessage, pollVoteMessageToTupleCV, type StoredPollVoteMessage, getStacksNetwork, pollVotesToClarityValue } from '@mijoco/stx_helpers/dist/index';
 import { bytesToHex } from '@stacks/common';
 import { getConfig, getSession } from '$stores/store_helpers';
 import { sha256 } from '@noble/hashes/sha256';
@@ -52,10 +34,7 @@ export async function fetchSip18PollVotes(pollId: string) {
 	return res;
 }
 
-export async function submitSip18PollVotes(
-	pollContract: string,
-	votes: Array<StoredPollVoteMessage>
-) {
+export async function submitSip18PollVotes(pollContract: string, votes: Array<StoredPollVoteMessage>) {
 	const args = pollVotesToClarityValue(votes);
 	await showContractCall({
 		network: getStacksNetwork(getConfig().VITE_NETWORK),
@@ -112,11 +91,7 @@ export async function signNewPoll(poll: TupleCV<TupleData<ClarityValue>>, callba
 	});
 }
 
-export async function newPollVoteMessage(
-	poll: PollCreateEvent,
-	vote: boolean,
-	voter: string
-): Promise<PollVoteMessage> {
+export async function newPollVoteMessage(poll: PollCreateEvent, vote: boolean, voter: string): Promise<PollVoteMessage> {
 	const ts = await fetchTimestamp();
 	return {
 		attestation: vote ? 'I agree with the statement' : 'I disagree with the statement',
@@ -156,10 +131,7 @@ export async function signPollVoteMessage(pollVoteMessage: PollVoteMessage, call
 	});
 }
 
-export async function postPollVoteMessage(
-	pollVoteObjectHash: string,
-	auth: { message: PollVoteMessage; signature: SignatureData }
-) {
+export async function postPollVoteMessage(pollVoteObjectHash: string, auth: { message: PollVoteMessage; signature: SignatureData }) {
 	const path = `${getConfig().VITE_BIGMARKET_API}/polling/sip18-votes/${pollVoteObjectHash}`;
 	const response = await fetch(path, {
 		method: 'POST',

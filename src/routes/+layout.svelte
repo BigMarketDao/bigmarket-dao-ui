@@ -22,7 +22,7 @@
 		unsubscribe3();
 	});
 
-	setConfigByUrl(page.url.searchParams, 'testnet');
+	setConfigByUrl(page.url.searchParams, 'devnet');
 
 	const initApp = async () => {
 		if (!$sessionStore.keySets || !$sessionStore.keySets[$configStore.VITE_NETWORK]) await initAddresses(sessionStore);
@@ -35,7 +35,6 @@
 		} else {
 			initApplication($configStore.VITE_STACKS_API, $configStore.VITE_MEMPOOL_API, $configStore.VITE_NETWORK, sessionStore, exchangeRates, '$configStore.VITE_SBTC_CONTRACT_ID', getUserData());
 		}
-		const daoContractId = page.params.slug;
 		const emTeamMam = await isExecutiveTeamMember(undefined, getStxAddress());
 		sessionStore.update((conf: BitcoinDaoSessionStore) => {
 			conf.userSettings.executiveTeamMember = emTeamMam?.executiveTeamMember || false;

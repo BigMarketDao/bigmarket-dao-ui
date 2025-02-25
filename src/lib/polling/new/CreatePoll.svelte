@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { configStore } from '$stores/stores_config';
 	import { bufferCV, noneCV, Pc, PostConditionMode, principalCV, someCV, tupleCV, uintCV } from '@stacks/transactions';
-	import { dataHashSip18, getStacksNetwork, opinionPollToTupleCV, type Auth, type OpinionPoll, type StoredOpinionPoll } from '@mijoco/stx_helpers/dist/index';
+	import { dataHashSip18, getStacksNetwork, marketDataToTupleCV, type Auth, type OpinionPoll, type StoredOpinionPoll } from '@mijoco/stx_helpers/dist/index';
 	import { openContractCall } from '@stacks/connect';
 	import { postCreatePollMessage } from '$lib/polling/polling';
 	import { getStxAddress, isLoggedIn, loginStacksFromHeader } from '$lib/stacks/stacks-connect';
@@ -77,7 +77,7 @@
 
 	const getSignature = async () => {
 		examplePoll.createdAt = new Date().getTime();
-		pollMessage = opinionPollToTupleCV(examplePoll.name, examplePoll.category, examplePoll.createdAt, examplePoll.proposer, examplePoll.token);
+		pollMessage = marketDataToTupleCV(examplePoll.name, examplePoll.category, examplePoll.createdAt, examplePoll.proposer, examplePoll.token);
 		const dataHash = dataHashSip18(getConfig().VITE_NETWORK, getConfig().VITE_PUBLIC_APP_NAME, getConfig().VITE_PUBLIC_APP_VERSION, pollMessage);
 		await signAdminMessage(async function (auth: Auth) {
 			const poll: StoredOpinionPoll = {
